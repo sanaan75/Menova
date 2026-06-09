@@ -9,7 +9,7 @@ public interface IActorService
     Actor Get();
 
     bool IsAuthenticated { get; }
-    bool IsSystemAdmin { get; }
+    bool IsSuperAdmin { get; }
     int UserId { get; }
 
     IList<Permission> GetPermissions();

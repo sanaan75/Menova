@@ -6,4 +6,28 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Reference Include="Entities.Common">
+        <HintPath>..\..\..\Dlls\Common\Entities.Common.dll</HintPath>
+      </Reference>
+      <Reference Include="Services.Common">
+        <HintPath>..\..\..\Dlls\Common\Services.Common.dll</HintPath>
+      </Reference>
+      <Reference Include="Web.Common">
+        <HintPath>..\..\..\Dlls\Common\Web.Common.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Entities\Entities.csproj" />
+      <ProjectReference Include="..\Services\Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.3.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.10" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.8" />
+    </ItemGroup>
+
 </Project>
