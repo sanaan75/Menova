@@ -1,0 +1,101 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+
+
+[Bb]in/
+   [Oo]bj/
+   *.cache
+   *.dll
+   *.exe
+   *.pdb
+   *.json
+
+**/.idea/
+**/*.iml
+**/workspace.xml
+
+# Visual Studio
+*.user
+*.userosscache
+*.suo
+*.csproj.user
+*.vbproj.user
+*.vcxproj.user
+.vs/
+.vscode/
+
+# MSTest
+*.trx
+
+# NUnit
+*.nunit
+
+# Coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# Benchmark
+BenchmarkDotNet.Artifacts/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Environment specific settings
+appsettings.*.json
+connectionstrings.*.json
+
+# Local configuration
+local/
+
+Entities/bin
+Entities/obj
+
+Services/bin
+Services/obj
+
+Persistence/bin
+Persistence/obj
+
+Web/bin
+Web/obj
+Persistence/*.cache
+
+*.cache
+
+App.API/bin
+App.API/obj
+
+App.Website/bin
+App.Website/obj
+
+/App.API/bin
+/App.API/obj
+
+/App.Website/bin
+/App.Website/obj
+
+Website/bin
+Website/obj
+
+/Website/bin
+/Website/obj
