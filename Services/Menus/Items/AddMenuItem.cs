@@ -3,7 +3,7 @@ using Entities.Menus;
 
 namespace Services.Menus.Items;
 
-public class AddMenuItem(IDb db, ISearchMenuItems searchMenuItems) : IAddMenuItem
+public class AddMenuItem(IDb db, ISearchMenuItems searchMenuItems,IActorService actorService) : IAddMenuItem
 {
     public MenuItem Respond(IAddMenuItem.Request request)
     {
@@ -18,6 +18,7 @@ public class AddMenuItem(IDb db, ISearchMenuItems searchMenuItems) : IAddMenuIte
 
         return db.Set<MenuItem>().Add(new MenuItem
         {
+            UserId = actorService.UserId,
             SubCategoryId = request.SubCategoryId,
             Name = request.Name.Clean(),
             Description = request.Description,

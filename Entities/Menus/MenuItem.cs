@@ -1,9 +1,14 @@
-﻿namespace Entities.Menus;
+﻿using Entities.Users;
+
+namespace Entities.Menus;
 
 public class MenuItem : IEntity
 {
     public int Id { get; set; }
 
+    public User User { get; set; }
+    public int UserId { get; set; }
+    
     public SubCategory SubCategory { get; set; }
     public int SubCategoryId { get; set; }
 

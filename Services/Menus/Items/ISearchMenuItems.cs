@@ -11,6 +11,7 @@ public interface ISearchMenuItems
     {
         public int? Id { get; set; }
         public int? IgnoredId { get; set; }
+        public int? UserId { get; set; }
         public int? SubCategoryId { get; set; }
         public ISearchSubCategories.Request SubCategory { get; set; }
         public string Name { get; set; }public bool? IsActive { get; set; }

@@ -11,5 +11,6 @@ public interface ISearchCategories
         public int? Id { get; set; }
         public int? IgnoredId { get; set; }
         public int? MenuId { get; set; }
+        public ISearchMenus.Request Menu { get; set; }
         public string Name { get; set; }public bool? IsActive { get; set; }}
 }

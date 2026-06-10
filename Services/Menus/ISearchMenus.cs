@@ -1,4 +1,5 @@
 ﻿using Entities.Menus;
+using Services.Users;
 
 namespace Services.Menus;
 
@@ -11,6 +12,7 @@ public interface ISearchMenus
         public int? Id { get; set; }
         public int? IgnoredId { get; set; }
         public int? UserId { get; set; }
+        public ISearchUsers.Request User { get; set; }
         public string Name { get; set; }
     }
 }

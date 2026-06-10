@@ -8,15 +8,8 @@ using Web.APIs;
 
 namespace Web;
 
-public class ApiTokenMiddleware
+public class ApiTokenMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
-
-    public ApiTokenMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
-
     public async Task InvokeAsync(HttpContext context, 
         ITokenValidator tokenValidator, 
         ICreateActor createActor, 
@@ -28,7 +21,7 @@ public class ApiTokenMiddleware
 
         if (!requireAuth)
         {
-            await _next(context);
+            await next(context);
             return;
         }
 
@@ -56,6 +49,6 @@ public class ApiTokenMiddleware
         var actor = createActor.Respond(token.UserId);
         actorService.Set(actor);
 
-        await _next(context);
+        await next(context);
     }
 }

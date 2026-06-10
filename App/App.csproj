@@ -17,10 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Reference Include="Entities.Common">
         <HintPath>..\..\..\Dlls\Common\Entities.Common.dll</HintPath>
       </Reference>
