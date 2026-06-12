@@ -4,7 +4,7 @@ using Services.Menus;
 using Services.Models;
 using Web.APIs;
 
-namespace App.Controllers.Menus;
+namespace App.Controllers.Cafes;
 
 [Route("api/basics/[controller]")]
 [ApiController, ApiAuthorize]

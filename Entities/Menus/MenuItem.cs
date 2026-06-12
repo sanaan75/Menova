@@ -15,10 +15,10 @@ public class MenuItem : IEntity
     public string Name { get; set; }
     public string Description { get; set; }
 
-    public int? Price { get; set; }
     public int Order { get; set; }
     public bool IsActive { get; set; }
     public bool IsExist { get; set; }
     
     public ICollection<MenuItemImage> Images { get; set; }
+    public ICollection<MenuItemProperty> Properties { get; set; }
 }

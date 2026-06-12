@@ -25,7 +25,6 @@ public class EditMenuItem(IDb db, ISearchMenuItems searchMenuItems) : IEditMenuI
 
         item.Name = request.Name.Clean();
         item.Description = request.Description;
-        item.Price = request.Price;
         item.Order = request.Order;
     }
 }

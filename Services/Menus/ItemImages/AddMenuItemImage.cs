@@ -7,12 +7,12 @@ public class AddMenuItemImage(IDb db) : IAddMenuItemImage
 {
     public MenuItemImage Respond(IAddMenuItemImage.Request request)
     {
-        Check.Given(request.ImageUrl, () => ErrorMessagePersian.Unknown(Glossary.Image));
+        Check.Given(request.Url, () => ErrorMessagePersian.Unknown(Glossary.Image));
 
         return db.Set<MenuItemImage>().Add(new MenuItemImage
         {
             MenuItemId = request.MenuItemId,
-            ImageUrl = request.ImageUrl
+            Url = request.Url
         }).Entity;
     }
 }

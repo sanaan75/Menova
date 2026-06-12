@@ -22,7 +22,6 @@ public class AddMenuItem(IDb db, ISearchMenuItems searchMenuItems,IActorService 
             SubCategoryId = request.SubCategoryId,
             Name = request.Name.Clean(),
             Description = request.Description,
-            Price = request.Price,
             Order = request.Order,
             IsActive = true
         }).Entity;

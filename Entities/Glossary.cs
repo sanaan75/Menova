@@ -170,6 +170,7 @@ public static class Glossary
     public const string Plan = "طرح";
     public const string Plans = "طرح ها";
     public const string PastryShop = "شیرینی فروشی";
+    public const string Property = "ویژگی";
 
     #endregion
 

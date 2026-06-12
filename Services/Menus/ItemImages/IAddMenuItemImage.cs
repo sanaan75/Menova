@@ -11,6 +11,6 @@ public interface IAddMenuItemImage
     {
         public ISearchSubCategories.Request MenuSubCategories { get; set; }
         public int MenuItemId { get; set; }
-        public string ImageUrl { get; set; }
+        public string Url { get; set; }
     }
 }

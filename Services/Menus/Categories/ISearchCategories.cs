@@ -9,6 +9,7 @@ public interface ISearchCategories
     class Request
     {
         public int? Id { get; set; }
+        public IList<int> Ids { get; set; }
         public int? IgnoredId { get; set; }
         public int? MenuId { get; set; }
         public ISearchMenus.Request Menu { get; set; }
