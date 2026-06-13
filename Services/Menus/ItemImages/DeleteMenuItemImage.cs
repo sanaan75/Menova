@@ -1,18 +1,15 @@
 using Entities;
 using Entities.Menus;
-using Services.Menus.Items;
 
 namespace Services.Menus.ItemImages;
 
-public class DeleteMenuItemImage(IDb db, IActorService actorService,ISearchMenuItems searchMenuItems) : IDeleteMenuItemImage
+public class DeleteMenuItemImage(IDb db, ICheckIsOwnerMenuItemImage checkIsOwnerMenuItemImage) : IDeleteMenuItemImage
 {
     public void Respond(int id)
     {
+        Check.True(checkIsOwnerMenuItemImage.Respond(id), () => ErrorMessagePersian.NotAllowed(Glossary.Delete));
+
         var image = db.Set<MenuItemImage>().GetById(id);
-        var userId = actorService.UserId;
-        
-        var item = searchMenuItems.Respond().GetById(image.MenuItemId);
-        // i should check that image is for this user
         db.Set<MenuItemImage>().Remove(image);
     }
 }

@@ -6,17 +6,19 @@ using Web.APIs;
 
 namespace App.Controllers.Cafes;
 
-[Route("api/basics/[controller]")]
+[Route("api/cafe/[controller]")]
 [ApiController, ApiAuthorize]
 public class MenuController(
     IDb db,
     ISearchMenus searchMenus,
+    IEditMenu editMenu,
     IActorService actorService)
     : Controller
 {
-    [HttpPost, Route("Add")]
-    public IActionResult Add()
+    [HttpPost, Route("Edit")]
+    public IActionResult Edit(IEditMenu.Request request)
     {
+        editMenu.Respond(request);
         db.Save();
 
         return Ok();
@@ -32,13 +34,7 @@ public class MenuController(
 
         return Ok(new ApiResponseModel
         {
-            Data =  menu
+            Data = menu
         });
-    }
-
-
-    public class AddProvinceModel
-    {
-        public string Name { get; set; }
     }
 }

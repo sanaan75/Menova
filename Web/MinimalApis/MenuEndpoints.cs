@@ -17,8 +17,7 @@ public static class MenuEndpoints
 
         return group;
     }
-
-
+    
     private static async Task<IResult> FetchAll(
         string username,
         IDb db,

@@ -1,9 +1,10 @@
 using Entities;
 using Entities.Menus;
+using Services.Menus.Categories;
 
 namespace Services.Menus.SubCategories;
 
-public class AddSubCategory(IDb db, ISearchSubCategories searchSubCategories) : IAddSubCategory
+public class AddSubCategory(IDb db, ISearchSubCategories searchSubCategories, IActorService actorService) : IAddSubCategory
 {
     public SubCategory Respond(IAddSubCategory.Request request)
     {
@@ -14,6 +15,13 @@ public class AddSubCategory(IDb db, ISearchSubCategories searchSubCategories) : 
         {
             CategoryId = request.CategoryId,
             Name = request.Name.Clean(),
+            Category = new ISearchCategories.Request
+            {
+                Menu = new ISearchMenus.Request
+                {
+                    UserId = actorService.UserId
+                }
+            }
         }).Any();
         Check.False(duplicate, () => ErrorMessagePersian.Duplicate(Glossary.SubCategory));
 

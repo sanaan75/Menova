@@ -3,13 +3,15 @@ using Entities.Menus;
 
 namespace Services.Menus.Categories;
 
-public class EditCategory(IDb db, ISearchCategories searchCategories) : IEditCategory
+public class EditCategory(IDb db, ISearchCategories searchCategories, ICheckIsCategoryOwner checkIsCategoryOwner) : IEditCategory
 {
     public void Respond(IEditCategory.Request request)
     {
         Check.Positive(request.Order, () => ErrorMessagePersian.NotAllowed(Glossary.Order));
         Check.Given(request.Name, () => ErrorMessagePersian.Unknown(Glossary.Name));
 
+        Check.True(checkIsCategoryOwner.Respond(request.Id), () => ErrorMessagePersian.NotAllowed(Glossary.EditCategory));
+        
         var category = db.Set<Category>().GetById(request.Id);
         Check.NotNull(category, () => ErrorMessagePersian.NotFound(Glossary.Category));
 

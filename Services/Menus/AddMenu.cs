@@ -15,11 +15,18 @@ public class AddMenu(IDb db, ISearchMenus searchMenus) : IAddMenu
         }).Any();
         Check.False(duplicate, () => ErrorMessagePersian.Duplicate(Glossary.Menu));
 
-        return db.Set<Menu>().Add(new Menu
+        var menu = new Menu
         {
-            UserId = request.UserId,
+            User = request.User,
             Name = request.Name.Clean(),
             Description = request.Description
-        }).Entity;
+        };
+
+        if (request.UserId is null)
+            menu.User = request.User;
+        else
+            menu.UserId = request.UserId.Value;
+
+        return db.Set<Menu>().Add(menu).Entity;
     }
 }

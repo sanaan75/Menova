@@ -5,6 +5,8 @@ public static class Glossary
     #region A-a
 
     public const string Average = "میانگین";
+    public const string Add = "افزودن";
+    public const string AddImage = $"{Add} {Image}";
     public const string Amount = "مبلغ";
     public const string Asset = "دارایی";
     public const string AssetType = $"نوع {Asset}";
@@ -25,6 +27,7 @@ public static class Glossary
     public const string BusinessType = "نوع کسب و کار";
     public const string Bakery = "نانوایی";
     public const string Bar = "بار";
+
     #endregion
 
     #region C-c
@@ -42,7 +45,7 @@ public static class Glossary
     public const string CafeRestaurant = "کافه رستوران";
     public const string CoffeeShop = "کافی شاپ";
     public const string Catering = "کترینگ";
-    
+
     #endregion
 
     #region D-d
@@ -57,6 +60,9 @@ public static class Glossary
 
     public const string Email = "ایمیل";
     public const string Event = "رویداد";
+    public const string Edit = "ویرایش";
+    public const string EditCategory = $"{Edit} {Category}";
+    public const string EditSubCategory = $"{Edit} {SubCategory}";
     public const string Expire = "انقضا";
     public const string EventDate = $"{Date} {Event}";
     public const string ExpireDate = $"{Date} {Expire}";
@@ -72,7 +78,7 @@ public static class Glossary
     public const string FileName = "نام فایل";
     public const string FoodTruck = "فود تراک";
     public const string FastFood = "فست فود";
-    
+
     #endregion
 
     #region G-g
@@ -91,7 +97,7 @@ public static class Glossary
 
     public const string Id = "شناسه";
     public const string Item = "مورد";
-    public const string Image = "عکس";
+    public const string Image = "تصویر";
     public const string IceCreamShop = "بستنی فروشی";
 
     #endregion
@@ -210,7 +216,7 @@ public static class Glossary
     public const string Token = "توکن";
     public const string Total = "جمع کل";
     public const string TeaHouse = "چایخانه";
-    
+
     #endregion
 
     #region U-u

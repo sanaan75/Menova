@@ -11,6 +11,7 @@ public interface ISearchMenuItemProperty
         public int? Id { get; set; }
         public int? IgnoredId { get; set; }
         public int? MenuItemId { get; set; }
+        public ISearchMenuItems.Request MenuItem { get; set; }
         public string Title { get; set; }
         public bool IsPrice { get; set; }
     }

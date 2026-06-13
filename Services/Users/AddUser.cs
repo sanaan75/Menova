@@ -1,5 +1,6 @@
 using Entities;
 using Entities.Users;
+using Services.Menus;
 using Services.Security;
 
 namespace Services.Users;
@@ -7,6 +8,7 @@ namespace Services.Users;
 public class AddUser(
     IDb db,
     ISearchUsers searchUsers,
+    IAddMenu addMenu,
     IRandomPasswordService randomPasswordService)
     : IAddUser
 {
@@ -36,7 +38,7 @@ public class AddUser(
 
         var password = HashPassword.Hash(request.Username, plainPassword);
 
-        return db.Set<User>().Add(new User
+        var user= db.Set<User>().Add(new User
         {
             Name = request.Name.Clean(),
             Title = request.Title.Clean(),
@@ -52,5 +54,14 @@ public class AddUser(
             TelegramLink = request.TelegramLink,
             Enabled = true
         }).Entity;
+
+        addMenu.Respond(new IAddMenu.Request
+        {
+            User = user,
+            Name = "",
+            Description = ""
+        });
+
+        return user;
     }
 }
