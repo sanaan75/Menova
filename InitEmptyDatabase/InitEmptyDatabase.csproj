@@ -15,4 +15,10 @@
       <ProjectReference Include="..\Persistence\Persistence.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Services.Common">
+        <HintPath>..\..\..\Dlls\Common\Services.Common.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

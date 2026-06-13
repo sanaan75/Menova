@@ -1,6 +1,7 @@
 ﻿using Entities;
 using Entities.Basics.AdminLevels;
 using Entities.Basics.Security;
+using Entities.Menus;
 using Entities.Security;
 using Entities.Settings;
 using Entities.Users;
@@ -46,7 +47,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public void AddPostSaveAction(Action action) => _postSaveActions.Add(action);
 
     public DbSet<Setting> Settings { get; set; }
-    
+
     public DbSet<User> Users { get; set; }
     public DbSet<UserGroup> UserGroups { get; set; }
     public DbSet<UserGroupPermission> UserGroupPermissions { get; set; }
@@ -59,6 +60,18 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<AppSession> AppSessions { get; set; }
     public DbSet<TokenDetail> TokenDetails { get; set; }
     // public DbSet<SystemLog> SystemLogs { get; set; }
+
+    public DbSet<Menu> Menus { get; set; }
+
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<CategoryNotify> CategoryNotifies { get; set; }
+
+    public DbSet<SubCategory> SubCategories { get; set; }
+    public DbSet<SubCategoryNotify> SubCategoryNotifies { get; set; }
+
+    public DbSet<MenuItem> MenuItems { get; set; }
+    public DbSet<MenuItemImage> MenuItemImages { get; set; }
+    public DbSet<MenuItemProperty> MenuItemProperties { get; set; }
 
     public IQueryable<TEntity> Query<TEntity>() where TEntity : class, IEntity
     {
