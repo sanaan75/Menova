@@ -13,6 +13,5 @@ public interface ISearchMenuItemProperty
         public int? MenuItemId { get; set; }
         public ISearchMenuItems.Request MenuItem { get; set; }
         public string Title { get; set; }
-        public bool IsPrice { get; set; }
     }
 }

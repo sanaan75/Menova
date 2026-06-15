@@ -5,9 +5,9 @@ using Services.Menus.Categories;
 using Services.Models;
 using Web.APIs;
 
-namespace App.Controllers.Cafes;
+namespace App.Controllers;
 
-[Route("api/cafe/[controller]")]
+[Route("api/[controller]")]
 [ApiController, ApiAuthorize]
 public class CategoryController(
     IDb db,

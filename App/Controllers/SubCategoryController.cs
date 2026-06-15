@@ -6,9 +6,9 @@ using Services.Menus.SubCategories;
 using Services.Models;
 using Web.APIs;
 
-namespace App.Controllers.Cafes;
+namespace App.Controllers;
 
-[Route("api/cafe/[controller]")]
+[Route("api/[controller]")]
 [ApiController, ApiAuthorize]
 public class SubCategoryController(
     IDb db,

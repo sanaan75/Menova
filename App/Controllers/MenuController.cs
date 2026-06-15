@@ -4,9 +4,9 @@ using Services.Menus;
 using Services.Models;
 using Web.APIs;
 
-namespace App.Controllers.Cafes;
+namespace App.Controllers;
 
-[Route("api/cafe/[controller]")]
+[Route("api/[controller]")]
 [ApiController, ApiAuthorize]
 public class MenuController(
     IDb db,
