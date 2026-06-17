@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Contexts;
 
 Console.WriteLine("Init Empty Database");

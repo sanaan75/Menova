@@ -2,6 +2,7 @@ using Entities.Validations;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Apis;
+using Services.Models;
 using Services.Users;
 
 namespace App.Controllers.Users;
@@ -25,13 +26,17 @@ public class UserController(
 
         await db.SaveAsync();
 
-        return Ok(new
+        return Ok(new ApiResponseModel
         {
-            Token = key,
-            Expire = expire,
-            UserId = actor.UserId,
-            Title = actor.Title,
-            IsAuthenticated = actor.IsAuthenticated
+            Message = "ورود موفق",
+            Data = new
+            {
+                Token = key,
+                Expire = expire,
+                UserId = actor.UserId,
+                Title = actor.Title,
+                IsAuthenticated = actor.IsAuthenticated
+            }
         });
     }
 

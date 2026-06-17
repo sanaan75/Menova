@@ -10,9 +10,9 @@ namespace Web;
 
 public class ApiTokenMiddleware(RequestDelegate next)
 {
-    public async Task InvokeAsync(HttpContext context, 
-        ITokenValidator tokenValidator, 
-        ICreateActor createActor, 
+    public async Task InvokeAsync(HttpContext context,
+        ITokenValidator tokenValidator,
+        ICreateActor createActor,
         IActorService actorService,
         ITokenDetailCache tokenDetailCache)
     {

@@ -28,7 +28,7 @@ public class ActorService(ISessionService sessionService) : IActorService
     public bool IsAuthenticated => Get()?.IsAuthenticated ?? false;
     public int UserId => Get().UserId;
 
-    public bool IsSuperAdmin => Get().Type == UserType.SuperAdmin;
+    public bool IsSystemAdmin => Get().Type == UserType.SuperAdmin;
 
     public bool HasPermission(Permission permission)
     {
