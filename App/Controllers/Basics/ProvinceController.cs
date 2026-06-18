@@ -23,6 +23,7 @@ public class ProvinceController(
         return Ok();
     }
 
+    
     [HttpPost, Route("List")]
     public IActionResult List()
     {
@@ -31,6 +32,7 @@ public class ProvinceController(
         return Ok(items);
     }
 
+    
     [HttpPost, Route("Search")]
     public IActionResult Search(SearchProvinceModel request)
     {
@@ -48,6 +50,7 @@ public class ProvinceController(
         return Ok(new { Data = items });
     }
 
+    
     public class AddProvinceModel
     {
         public string Name { get; set; }

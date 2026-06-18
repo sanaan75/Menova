@@ -39,6 +39,7 @@ public class MenuItemController(
         });
     }
 
+    
     [HttpPost, Route("Add")]
     public IActionResult Add(IAddMenuItem.Request request)
     {
@@ -48,6 +49,7 @@ public class MenuItemController(
         return Ok();
     }
 
+    
     [HttpPost, Route("Edit")]
     public IActionResult Edit(IEditMenuItem.Request request)
     {

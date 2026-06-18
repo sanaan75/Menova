@@ -1,3 +1,4 @@
+using Entities;
 using Entities.Validations;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -35,11 +36,14 @@ public class UserController(
                 Expire = expire,
                 UserId = actor.UserId,
                 Title = actor.Title,
+                Type = actor.Type,
+                TypeCaption = actor.Type.GetCaption(),
                 IsAuthenticated = actor.IsAuthenticated
             }
         });
     }
 
+    
     [Route("ResetPassword")]
     [HttpPost]
     public async Task<IActionResult> ResetPassword()

@@ -44,6 +44,7 @@ public class CategoryController(
         });
     }
 
+
     [HttpPost, Route("Add")]
     public IActionResult Add(IAddCategory.Request request)
     {
@@ -52,6 +53,7 @@ public class CategoryController(
 
         return Ok();
     }
+
 
     [HttpPost, Route("Edit")]
     public IActionResult Edit(IEditCategory.Request request)

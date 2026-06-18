@@ -57,6 +57,7 @@ public class SubCategoryController(
         });
     }
 
+    
     [HttpPost, Route("Add")]
     public IActionResult Add(IAddSubCategory.Request request)
     {
@@ -66,6 +67,7 @@ public class SubCategoryController(
         return Ok();
     }
 
+    
     [HttpPost, Route("Edit")]
     public IActionResult Edit(IEditSubCategory.Request request)
     {

@@ -2,6 +2,7 @@ using Entities.Menus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Services;
 using Services.Users;
 
@@ -17,7 +18,7 @@ public static class MenuEndpoints
 
         return group;
     }
-    
+
     private static async Task<IResult> FetchAll(
         string username,
         IDb db,
@@ -34,7 +35,7 @@ public static class MenuEndpoints
         if (userId == 0)
             return Results.NotFound();
 
-        var items = db.Query<MenuItem>()
+        var items = await db.Query<MenuItem>()
             .Where(i => i.UserId == userId && i.SubCategory.IsActive && i.SubCategory.Category.IsActive)
             .Select(i => new
             {
@@ -42,12 +43,12 @@ public static class MenuEndpoints
                 i.Name,
                 i.Description,
                 i.Order,
-                
+
                 Properties = i.Properties.Select(p => new
                 {
                     p.Id, p.Title, p.Price,
                 }),
-                
+
                 Images = i.Images.Select(img => new
                 {
                     img.Id, ImageUrl = img.Url
@@ -88,7 +89,7 @@ public static class MenuEndpoints
                     }
                 }
             })
-            .ToList();
+            .ToListAsync(cancellationToken: cancellationToken);
 
         return TypedResults.Ok(new { Data = items });
     }
