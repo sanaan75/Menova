@@ -19,7 +19,7 @@ public class MenuItemController(
     [HttpPost, Route("List")]
     public IActionResult List()
     {
-        var categories = searchMenuItems.Respond(new ISearchMenuItems.Request
+        var items = searchMenuItems.Respond(new ISearchMenuItems.Request
             {
                 UserId = actorService.UserId
             })
@@ -30,16 +30,17 @@ public class MenuItemController(
                 i.Description,
                 i.Order,
                 i.IsActive,
-                i.SubCategoryId
+                i.SubCategoryId,
+                SubCategory = i.SubCategory.Name
             }).ToList();
 
         return Ok(new ApiResponseModel
         {
-            Data = categories
+            Data = items
         });
     }
 
-    
+
     [HttpPost, Route("Add")]
     public IActionResult Add(IAddMenuItem.Request request)
     {
@@ -49,7 +50,7 @@ public class MenuItemController(
         return Ok();
     }
 
-    
+
     [HttpPost, Route("Edit")]
     public IActionResult Edit(IEditMenuItem.Request request)
     {

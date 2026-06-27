@@ -11,6 +11,7 @@ public interface IAddUser
         public string Name { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        
         public string Username { get; set; }
         public string Mobile { get; set; }
         public string Slug { get; set; }

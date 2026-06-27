@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Basics.AdminLevels;
+using Services.Models;
 using Web.APIs;
 
 namespace App.Controllers.Basics;
 
 [Route("api/basics/[controller]")]
-[ApiController,ApiAuthorize]
+[ApiController]
 public class ProvinceController(
     IDb db,
     IAddProvince addProvince,
@@ -23,16 +24,26 @@ public class ProvinceController(
         return Ok();
     }
 
-    
+
     [HttpPost, Route("List")]
-    public IActionResult List()
+    public IActionResult List(PaginationModel request)
     {
         var items = provinceCache.GetAll();
+        var result = provinceCache.GetAll().Skip((request.Page - 1) * request.Size).Take(request.Size).ToList();
 
-        return Ok(items);
+        return Ok(new ApiResponseModel
+        {
+            Data = new
+            {
+                Page = request.Page,
+                Size = request.Size,
+                Items = result,
+                TotalItems = items.Count
+            }
+        });
     }
 
-    
+
     [HttpPost, Route("Search")]
     public IActionResult Search(SearchProvinceModel request)
     {
@@ -50,7 +61,7 @@ public class ProvinceController(
         return Ok(new { Data = items });
     }
 
-    
+
     public class AddProvinceModel
     {
         public string Name { get; set; }

@@ -8,7 +8,7 @@ using Web.APIs;
 namespace App.Controllers;
 
 [Route("api/[controller]")]
-[ApiController, ApiAuthorize]
+[ApiController,ApiAuthorize]
 public class CategoryController(
     IDb db,
     ISearchCategories searchCategories,
@@ -24,7 +24,7 @@ public class CategoryController(
             {
                 Menu = new ISearchMenus.Request
                 {
-                    UserId = actorService.UserId
+                    UserId = 2 // actorService.UserId
                 }
             })
             .Select(i => new

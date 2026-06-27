@@ -1,7 +1,9 @@
 using System.Security.Claims;
+using Entities;
 using Microsoft.AspNetCore.Http;
 using Services;
 using Services.Apis;
+using Services.Models;
 using Services.TokenDetails;
 using Services.Users.Auth;
 using Web.APIs;
@@ -30,7 +32,10 @@ public class ApiTokenMiddleware(RequestDelegate next)
         if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
         {
             context.Response.StatusCode = 401;
-            await context.Response.WriteAsync("Missing or invalid Authorization header.");
+            await context.Response.WriteAsync(new ApiResponseModel
+            {
+                Message = "Missing or invalid Authorization header."
+            }.ToJson());
             return;
         }
 
@@ -41,7 +46,10 @@ public class ApiTokenMiddleware(RequestDelegate next)
         if (!isValid)
         {
             context.Response.StatusCode = 401;
-            await context.Response.WriteAsync("Invalid or expired API token.");
+            await context.Response.WriteAsync(new ApiResponseModel
+            {
+                Message = "نیاز به ورود مجدد به برنامه- توکن منقضی شده است"
+            }.ToJson());
             return;
         }
 

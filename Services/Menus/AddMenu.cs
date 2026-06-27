@@ -7,13 +7,11 @@ public class AddMenu(IDb db, ISearchMenus searchMenus) : IAddMenu
 {
     public Menu Respond(IAddMenu.Request request)
     {
-        Check.Given(request.Name, () => ErrorMessagePersian.Unknown(Glossary.Menu));
-
-        var duplicate = searchMenus.Respond(new ISearchMenus.Request
-        {
-            UserId = request.UserId,
-        }).Any();
-        Check.False(duplicate, () => ErrorMessagePersian.Duplicate(Glossary.Menu));
+        // var duplicate = searchMenus.Respond(new ISearchMenus.Request
+        // {
+        //     UserId = request.UserId,
+        // }).Any();
+        // Check.False(duplicate, () => ErrorMessagePersian.Duplicate(Glossary.Menu));
 
         var menu = new Menu
         {

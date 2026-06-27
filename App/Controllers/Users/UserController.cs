@@ -1,10 +1,12 @@
 using Entities;
 using Entities.Validations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Apis;
 using Services.Models;
 using Services.Users;
+using Web.APIs;
 
 namespace App.Controllers.Users;
 
@@ -15,11 +17,12 @@ public class UserController(
     ILoginApi loginApi,
     IApiTokenService apiTokenService,
     ILogoutUser logoutUser,
+    IAddUser addUser,
     IActorService actorService)
     : Controller
 {
     [Route("Login")]
-    [HttpPost]
+    [HttpPost, AllowAnonymous]
     public async Task<IActionResult> Login(LoginModel request)
     {
         var actor = await loginApi.Respond(request.Username, request.Password);
@@ -43,9 +46,9 @@ public class UserController(
         });
     }
 
-    
+
     [Route("ResetPassword")]
-    [HttpPost]
+    [HttpPost, AllowAnonymous]
     public async Task<IActionResult> ResetPassword()
     {
         // _resetPassword
@@ -55,7 +58,7 @@ public class UserController(
 
 
     [Route("ResetPasswordConfirmation")]
-    [HttpPost]
+    [HttpPost, AllowAnonymous]
     public async Task<IActionResult> ResetPasswordConfirmation()
     {
         // _resetPasswordConfirmation.Respond(request.Mobile, request.ConfirmCode);
@@ -64,11 +67,21 @@ public class UserController(
     }
 
     [Route("Logout")]
-    [HttpPost]
+    [HttpPost, ApiAuthorize]
     public async Task<IActionResult> Logout()
     {
         logoutUser.Respond(actorService.Get().Username);
         await db.SaveAsync();
+
+        return Ok();
+    }
+
+    [Route("Add")]
+    [HttpPost, ApiAuthorize]
+    public IActionResult Add(IAddUser.Request request)
+    {
+        addUser.Respond(request);
+        db.Save();
 
         return Ok();
     }

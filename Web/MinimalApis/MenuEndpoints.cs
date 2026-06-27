@@ -14,20 +14,20 @@ public static class MenuEndpoints
     {
         var group = routes.MapGroup("api/cafe").WithTags("Cafe");
 
-        group.MapGet("menu/{username}", FetchAll);
+        group.MapGet("menu/{slug}", FetchAll);
 
         return group;
     }
 
     private static async Task<IResult> FetchAll(
-        string username,
+        string slug,
         IDb db,
         ISearchUsers searchUsers,
         CancellationToken cancellationToken = default)
     {
         var userId = searchUsers.Respond(new ISearchUsers.Request
             {
-                Username = username
+                Slug = slug
             })
             .Select(u => u.Id)
             .SingleOrDefault();
@@ -54,40 +54,43 @@ public static class MenuEndpoints
                     img.Id, ImageUrl = img.Url
                 }),
 
-                SubCategory = new
-                {
-                    Id = i.SubCategoryId,
-                    i.SubCategory.Name,
-                    i.SubCategory.Description,
-                    i.SubCategory.Order,
+                i.SubCategoryId,
+                SubCategoryName = i.SubCategory.Name,
+                SubCategoryOrder = i.SubCategory.Order,
 
-                    Notifies = i.SubCategory.Notifies.Select(n => new
-                    {
-                        n.Id,
-                        n.Title
-                    }),
+                i.SubCategory.CategoryId,
+                CategoryName = i.SubCategory.Category.Name,
+                CategoryOrder = i.SubCategory.Category.Order,
+                CategoryImageUrl = i.SubCategory.Category.ImageUrl,
 
-                    Category = new
-                    {
-                        Id = i.SubCategory.CategoryId,
-                        i.SubCategory.Category.Name,
-                        i.SubCategory.Category.Description,
-                        i.SubCategory.Category.Order,
-                        i.SubCategory.Category.ImageUrl,
-
-                        Notifies = i.SubCategory.Category.Notifies.Select(n => new
-                        {
-                            n.Id,
-                            n.Title
-                        }),
-
-                        Menu = new
-                        {
-                            i.SubCategory.Category.Menu.Name,
-                            i.SubCategory.Category.Menu.Description
-                        }
-                    }
-                }
+                // SubCategory = new
+                // {
+                //     Id = i.SubCategoryId,
+                //     i.SubCategory.Name,
+                //     i.SubCategory.Description,
+                //     i.SubCategory.Order,
+                //
+                //     Notifies = i.SubCategory.Notifies.Select(n => new
+                //     {
+                //         n.Id,
+                //         n.Title
+                //     }),
+                //
+                //     Category = new
+                //     {
+                //         Id = i.SubCategory.CategoryId,
+                //         i.SubCategory.Category.Name,
+                //         i.SubCategory.Category.Description,
+                //         i.SubCategory.Category.Order,
+                //         i.SubCategory.Category.ImageUrl,
+                //
+                //         Notifies = i.SubCategory.Category.Notifies.Select(n => new
+                //         {
+                //             n.Id,
+                //             n.Title
+                //         })
+                //     }
+                // }
             })
             .ToListAsync(cancellationToken: cancellationToken);
 

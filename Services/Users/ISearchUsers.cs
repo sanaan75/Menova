@@ -11,6 +11,7 @@ public interface ISearchUsers
         public int? Id { get; set; }
         public int? IgnoredId { get; set; }
         public string Username { get; set; }
+        public string Slug { get; set; }
         public string LicenseId { get; set; }
 
         public UserType? Type { get; set; }

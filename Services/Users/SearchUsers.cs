@@ -20,6 +20,7 @@ public class SearchUsers(IDb db) : ISearchUsers
         
         items = items.Filter(request.CountyId, i => i.CountyId == request.CountyId!.Value);
         items = items.Filter(request.Username, i => i.Username == request.Username);
+        items = items.Filter(request.Slug, i => i.Slug == request.Slug);
 
         if (request.Enabled is not null)
             items = items.Where(i => i.Enabled == request.Enabled.Value);
