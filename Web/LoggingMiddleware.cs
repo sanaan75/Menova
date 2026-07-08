@@ -11,10 +11,11 @@ using Services.Users.Auth;
 namespace Web;
 
 public class LoggingMiddleware(
-    IServiceProvider serviceProvider,
+    IServiceProvider serviceProvider, // Keep this if needed for other services
     ITimeService timeService,
     ISettingsCache settingsCache,
     IRequestCounters requestCounters,
+    IActorService actorService, // Use this directly
     IFailedLoginService failedLoginService)
     : IMiddleware
 {
@@ -22,10 +23,8 @@ public class LoggingMiddleware(
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        using var services = serviceProvider.CreateScope();
-        var db = services.ServiceProvider.GetService<IStatisticDb>();
-        var getHost = services.ServiceProvider.GetService<IGetHost>();
-        var actorService = services.ServiceProvider.GetService<IActorService>();
+        var db = serviceProvider.GetService<IStatisticDb>(); // Or inject IStatisticDb directly
+        var getHost = serviceProvider.GetService<IGetHost>();
 
         try
         {
@@ -74,7 +73,7 @@ public class LoggingMiddleware(
                     await db.Set<ApiLog>().AddAsync(log);
                     await db.SaveAsync();
                 }
-                catch
+                catch(Exception ex)
                 {
                     // ignored
                 }
