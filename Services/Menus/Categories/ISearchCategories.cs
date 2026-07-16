@@ -4,7 +4,7 @@ namespace Services.Menus.Categories;
 
 public interface ISearchCategories
 {
-    IQueryable<Category> Respond(Request request);
+    IQueryable<Category> Respond(Request request = null);
 
     class Request
     {
@@ -13,5 +13,7 @@ public interface ISearchCategories
         public int? IgnoredId { get; set; }
         public int? MenuId { get; set; }
         public ISearchMenus.Request Menu { get; set; }
-        public string Name { get; set; }public bool? IsActive { get; set; }}
+        public string Name { get; set; }
+        public bool? IsActive { get; set; }
+    }
 }

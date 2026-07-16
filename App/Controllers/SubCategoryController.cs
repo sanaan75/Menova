@@ -14,6 +14,7 @@ public class SubCategoryController(
     IDb db,
     ISearchSubCategories searchSubCategories,
     IAddSubCategory addSubCategory,
+    IGetSubCategoryInfo getSubCategoryInfo,
     IEditSubCategory editSubCategory,
     IDeleteSubCategory deleteSubCategory,
     IActorService actorService)
@@ -68,6 +69,16 @@ public class SubCategoryController(
         return Ok();
     }
 
+    
+    [HttpPost, Route("Info")]
+    public IActionResult Info(IdModel request)
+    {
+        return Ok(new ApiResponseModel
+        {
+            Data = getSubCategoryInfo.Respond(request.Id)
+        });
+    }
+    
     
     [HttpPost, Route("Edit")]
     public IActionResult Edit(IEditSubCategory.Request request)

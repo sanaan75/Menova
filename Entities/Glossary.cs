@@ -84,6 +84,7 @@ public static class Glossary
     #region G-g
 
     public const string Group = "گروه";
+    public const string GetInfo = "دریافت اطلاعات";
 
     #endregion
 

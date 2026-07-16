@@ -3,7 +3,7 @@ using Entities.Menus;
 
 namespace Services.Menus.Categories;
 
-public class EditCategory(IDb db, ISearchCategories searchCategories, ICheckIsCategoryOwner checkIsCategoryOwner) : IEditCategory
+public class EditCategory(IDb db,ICheckIsCategoryOwner checkIsCategoryOwner, ISearchCategories searchCategories) : IEditCategory
 {
     public void Respond(IEditCategory.Request request)
     {

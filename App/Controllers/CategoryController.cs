@@ -13,6 +13,7 @@ public class CategoryController(
     IDb db,
     ISearchCategories searchCategories,
     IAddCategory addCategory,
+    IGetCategoryInfo getCategoryInfo,
     IEditCategory editCategory,
     IDeleteCategory deleteCategory)
     : Controller
@@ -54,6 +55,14 @@ public class CategoryController(
         return Ok();
     }
 
+    [HttpPost, Route("Info")]
+    public IActionResult Info(IdModel request)
+    {
+        return Ok(new ApiResponseModel
+        {
+            Data = getCategoryInfo.Respond(request.Id)
+        });
+    }
 
     [HttpPost, Route("Edit")]
     public IActionResult Edit(IEditCategory.Request request)
