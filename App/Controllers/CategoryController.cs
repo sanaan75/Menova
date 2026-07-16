@@ -8,13 +8,13 @@ using Web.APIs;
 namespace App.Controllers;
 
 [Route("api/[controller]")]
-[ApiController,ApiAuthorize]
+[ApiController, ApiAuthorize]
 public class CategoryController(
     IDb db,
     ISearchCategories searchCategories,
     IAddCategory addCategory,
     IEditCategory editCategory,
-    IActorService actorService)
+    IDeleteCategory deleteCategory)
     : Controller
 {
     [HttpPost, Route("List")]
@@ -59,6 +59,15 @@ public class CategoryController(
     public IActionResult Edit(IEditCategory.Request request)
     {
         editCategory.Respond(request);
+        db.Save();
+
+        return Ok();
+    }
+
+    [HttpPost, Route("Remove")]
+    public IActionResult Remove(IdModel request)
+    {
+        deleteCategory.Respond(request.Id);
         db.Save();
 
         return Ok();

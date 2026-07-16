@@ -15,6 +15,7 @@ public class SubCategoryController(
     ISearchSubCategories searchSubCategories,
     IAddSubCategory addSubCategory,
     IEditSubCategory editSubCategory,
+    IDeleteSubCategory deleteSubCategory,
     IActorService actorService)
     : Controller
 {
@@ -72,6 +73,16 @@ public class SubCategoryController(
     public IActionResult Edit(IEditSubCategory.Request request)
     {
         editSubCategory.Respond(request);
+        db.Save();
+
+        return Ok();
+    }
+    
+    
+    [HttpPost, Route("Remove")]
+    public IActionResult Remove(IdModel request)
+    {
+        deleteSubCategory.Respond(request.Id);
         db.Save();
 
         return Ok();
