@@ -29,7 +29,7 @@ public class DeleteSubCategory(
             SubCategoryId = subCategory.Id,
         }).Any();
         
-        Check.False(hasNotify && hasItem, () => ErrorMessagePersian.Invalid("به علت ثبت آیتم یا نوتفیکیشن ، حذف"));
+        Check.False(hasNotify || hasItem, () => ErrorMessagePersian.Invalid("به علت ثبت آیتم یا نوتفیکیشن ، حذف"));
 
         db.Set<SubCategory>().Remove(subCategory);
     }
