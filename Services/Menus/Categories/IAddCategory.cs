@@ -1,4 +1,5 @@
 ﻿using Entities.Menus;
+using Microsoft.AspNetCore.Http;
 
 namespace Services.Menus.Categories;
 
@@ -8,9 +9,9 @@ public interface IAddCategory
 
     class Request
     {
-        public int MenuId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public int Order { get; set; }
+        public IFormFile Image { get; set; }
     }
 }

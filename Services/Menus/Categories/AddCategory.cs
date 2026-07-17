@@ -1,29 +1,48 @@
 ﻿using Entities;
 using Entities.Menus;
+using Services.InfraStructures;
 
 namespace Services.Menus.Categories;
 
-public class AddCategory(IDb db, ISearchCategories searchCategories) : IAddCategory
+public class AddCategory(
+    IDb db,
+    IActorService actorService,
+    ISearchMenus searchMenus,
+    ISearchCategories searchCategories,
+    ISaveLocalFile saveLocalFile)
+    : IAddCategory
 {
     public Category Respond(IAddCategory.Request request)
     {
-        Check.Positive(request.MenuId, () => Glossary.Menu);
-        Check.Given(request.Name, () => Glossary.Category);
+        var menu = searchMenus.Respond(new ISearchMenus.Request
+        {
+            UserId = actorService.UserId
+        }).SingleOrDefault();
+
+        Check.NotNull(menu, () => ErrorMessagePersian.NotFound(Glossary.Menu));
+        Check.Given(request.Name, () => ErrorMessagePersian.Unknown(Glossary.Name));
 
         var duplicate = searchCategories.Respond(new ISearchCategories.Request
         {
-            MenuId = request.MenuId,
+            MenuId = menu.Id,
             Name = request.Name.Clean()
         }).Any();
-        Check.False(duplicate, () => ErrorMessage.Duplicate(Glossary.Category));
+        Check.False(duplicate, () => ErrorMessagePersian.Duplicate(Glossary.Category));
+
+        var url = saveLocalFile.Respond(new ISaveLocalFile.Request
+        {
+            File = request.Image,
+            Folder = Folders.Categories
+        });
 
         return db.Set<Category>().Add(new Category
         {
-            MenuId = request.MenuId,
+            MenuId = menu.Id,
             Name = request.Name.Clean(),
             Description = request.Description,
             Order = request.Order,
-            IsActive = true
+            IsActive = true,
+            ImageUrl = url
         }).Entity;
     }
 }

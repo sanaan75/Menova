@@ -38,4 +38,10 @@
       <ProjectReference Include="..\Web\Web.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\menu\categories\" />
+      <Folder Include="wwwroot\menu\items\" />
+      <Folder Include="wwwroot\menu\subCategories\" />
+    </ItemGroup>
+
 </Project>

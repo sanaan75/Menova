@@ -14,6 +14,15 @@
       <Reference Include="Entities.Common">
         <HintPath>..\..\..\Dlls\Common\Entities.Common.dll</HintPath>
       </Reference>
+      <Reference Include="Microsoft.AspNetCore.Hosting.Abstractions">
+        <HintPath>C:\Users\Sanaan\.dotnet\shared\Microsoft.AspNetCore.App\10.0.2\Microsoft.AspNetCore.Hosting.Abstractions.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+        <HintPath>C:\Users\Sanaan\.dotnet\shared\Microsoft.AspNetCore.App\10.0.2\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.AspNetCore.Http.Features">
+        <HintPath>C:\Users\Sanaan\.dotnet\shared\Microsoft.AspNetCore.App\10.0.2\Microsoft.AspNetCore.Http.Features.dll</HintPath>
+      </Reference>
       <Reference Include="Services.Common">
         <HintPath>..\..\..\Dlls\Common\Services.Common.dll</HintPath>
       </Reference>
@@ -21,6 +30,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.10" />
     </ItemGroup>
 
 </Project>
