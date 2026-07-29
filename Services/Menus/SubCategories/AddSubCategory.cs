@@ -1,15 +1,24 @@
 using Entities;
 using Entities.Menus;
+using Services.InfraStructures;
 using Services.Menus.Categories;
 
 namespace Services.Menus.SubCategories;
 
-public class AddSubCategory(IDb db, ISearchSubCategories searchSubCategories, IActorService actorService) : IAddSubCategory
+public class AddSubCategory(
+    IDb db,
+    ISearchSubCategories searchSubCategories,
+    IActorService actorService,
+    ICheckIsCategoryOwner checkIsCategoryOwner,
+    ISaveLocalFile saveLocalFile)
+    : IAddSubCategory
 {
     public SubCategory Respond(IAddSubCategory.Request request)
     {
         Check.Positive(request.Order, () => ErrorMessagePersian.NotAllowed(Glossary.Order));
         Check.Given(request.Name, () => ErrorMessagePersian.Unknown(Glossary.Name));
+
+        Check.True(checkIsCategoryOwner.Respond(request.CategoryId), () => ErrorMessagePersian.NotAllowed($"{Glossary.Add} {Glossary.SubCategory}"));
 
         var duplicate = searchSubCategories.Respond(new ISearchSubCategories.Request
         {
@@ -23,7 +32,14 @@ public class AddSubCategory(IDb db, ISearchSubCategories searchSubCategories, IA
                 }
             }
         }).Any();
+
         Check.False(duplicate, () => ErrorMessagePersian.Duplicate(Glossary.SubCategory));
+
+        var url = saveLocalFile.Respond(new ISaveLocalFile.Request
+        {
+            File = request.Image,
+            Folder = Folders.Categories
+        });
 
         return db.Set<SubCategory>().Add(new SubCategory
         {
@@ -31,8 +47,8 @@ public class AddSubCategory(IDb db, ISearchSubCategories searchSubCategories, IA
             Name = request.Name.Clean(),
             Description = request.Description,
             Order = request.Order,
-            ImageUrl = request.ImageUrl,
-            IsActive = request.IsActive
+            ImageUrl = url,
+            IsActive = true
         }).Entity;
     }
 }

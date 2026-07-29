@@ -1,5 +1,5 @@
 ﻿using Entities.Menus;
-using Services.Menus.SubCategories;
+using Microsoft.AspNetCore.Http;
 
 namespace Services.Menus.ItemImages;
 
@@ -9,8 +9,7 @@ public interface IAddMenuItemImage
 
     class Request
     {
-        public ISearchSubCategories.Request MenuSubCategories { get; set; }
         public int MenuItemId { get; set; }
-        public string Url { get; set; }
+        public IFormFile Image { get; set; }
     }
 }
