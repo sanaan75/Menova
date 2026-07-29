@@ -198,6 +198,7 @@ public static class Glossary
 
     #region S-s
 
+    public const string Search = "جستجو";
     public const string Shaba = "شماره شبا";
     public const string Slip = "فیش";
     public const string Share = "سهم";
