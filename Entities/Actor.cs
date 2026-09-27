@@ -11,6 +11,7 @@ public class Actor
     public string Title { get; set; }
     public string Name { get; set; }
     public UserType Type { get; set; }
+    public bool IsSuperAdmin { get; set; }
     public BusinessType BusinessType { get; set; }
     public List<Permission> Permissions { get; set; }
 

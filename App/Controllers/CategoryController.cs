@@ -11,6 +11,7 @@ namespace App.Controllers;
 [ApiController, ApiAuthorize]
 public class CategoryController(
     IDb db,
+    IActorService actorService,
     ISearchCategories searchCategories,
     IAddCategory addCategory,
     IGetCategoryInfo getCategoryInfo,
@@ -25,7 +26,7 @@ public class CategoryController(
             {
                 Menu = new ISearchMenus.Request
                 {
-                    UserId = 2 // actorService.UserId
+                    UserId = actorService.UserId
                 }
             })
             .Select(i => new

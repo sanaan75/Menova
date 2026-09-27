@@ -21,8 +21,7 @@ public class SearchMenuItems(IDb db, ISearchSubCategories searchSubCategories) :
 
         if (request.SubCategory is not null)
             items = from i in items join j in searchSubCategories.Respond(request.SubCategory) on i.SubCategoryId equals j.Id select i;
-
-
+        
         items = items.Filter(request.Name, i => i.Name == request.Name);
         items = items.Filter(request.IsActive, i => i.IsActive == request.IsActive);
 

@@ -75,7 +75,7 @@ public class ApiExceptionFilter(IServiceProvider serviceProvider, ITimeService t
         }
         else
         {
-            context.Result = new ObjectResult(new { Message = CommonMessages.Error500 })
+            context.Result = new ObjectResult(new { Message = context.Exception + " " + context.Exception.InnerException })
             {
                 StatusCode = 500
             };

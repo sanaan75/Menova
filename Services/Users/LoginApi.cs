@@ -1,26 +1,31 @@
 using Entities;
-using Services.Apis;
 using Services.Users.Auth;
 
 namespace Services.Users;
 
-public class LoginApi(ISearchUsers searchUsers, ICreateActor createActor, IApiTokenService apiTokenService) : ILoginApi
+public class LoginApi(ISearchUsers searchUsers, ICreateActor createActor) : ILoginApi
 {
-    public async Task<Actor> Respond(string username, string password)
+    public Task<Actor> Respond(string username, string password)
     {
-        var user = searchUsers.Respond(new ISearchUsers.Request
+        try
         {
-            Username = username,
-        }).SingleOrDefault();
+            var user = searchUsers.Respond(new ISearchUsers.Request
+            {
+                Username = username
+            }).SingleOrDefault();
 
-        Check.NotNull(user, () => ErrorMessagePersian.Invalid("نام کاربری یا رمز عبور"));
+            Check.NotNull(user, () => MessageFactory.Wrong($"{Glossary.Username} یا {Glossary.Password}"));
 
-        var hashedPass = HashPassword.Hash(username, password);
-        Check.Equal(hashedPass, user.Password, () => ErrorMessagePersian.Invalid("نام کاربری یا رمز عبور"));
+            var hashedPass = HashPassword.Hash(username, password);
+            Check.Equal(hashedPass, user.Password, () => MessageFactory.Wrong($"{Glossary.Username} یا {Glossary.Password}"));
 
-        var actor = createActor.Respond(user.Username, user.Password, true);
-        await apiTokenService.CreateTokenAsync(actor.UserId);
+            var actor = createActor.Respond(user.Username, user.Password, true);
 
-        return actor;
+            return Task.FromResult(actor);
+        }
+        catch (Exception exception)
+        {
+            return Task.FromException<Actor>(exception);
+        }
     }
 }

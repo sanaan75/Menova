@@ -1,4 +1,5 @@
 using Entities;
+using Entities.Logs;
 using Entities.Validations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +17,9 @@ public class UserController(
     IDb db,
     ILoginApi loginApi,
     IApiTokenService apiTokenService,
-    ILogoutUser logoutUser,
     IAddUser addUser,
+    IAddUserLogin addUserLogin,
+    ILogoutApi logoutApi,
     IActorService actorService)
     : Controller
 {
@@ -26,9 +28,14 @@ public class UserController(
     public async Task<IActionResult> Login(LoginModel request)
     {
         var actor = await loginApi.Respond(request.Username, request.Password);
-        var (key, expire) = await apiTokenService.CreateTokenAsync(actor.UserId);
+        var (key, expire) = apiTokenService.CreateTokenAsync(actor.UserId);
+        addUserLogin.Respond(new IAddUserLogin.Request
+        {
+            Username = actor.Username,
+            Method = UserLoginMethod.Password,
+        });
 
-        await db.SaveAsync();
+        db.Save();
 
         return Ok(new ApiResponseModel
         {
@@ -38,11 +45,25 @@ public class UserController(
                 Token = key,
                 Expire = expire,
                 UserId = actor.UserId,
-                Title = actor.Title,
                 Type = actor.Type,
                 TypeCaption = actor.Type.GetCaption(),
-                IsAuthenticated = actor.IsAuthenticated
+                IsAuthenticated = actor.IsAuthenticated,
+                IsSuperAdmin = actor.IsSuperAdmin
             }
+        });
+    }
+
+
+    [Route("Logout")]
+    [HttpPost, ApiAuthorize]
+    public IActionResult Logout()
+    {
+        logoutApi.Respond(actorService.UserId);
+        db.Save();
+
+        return Ok(new ApiResponseModel
+        {
+            Message = "خروج"
         });
     }
 
@@ -64,16 +85,6 @@ public class UserController(
         // _resetPasswordConfirmation.Respond(request.Mobile, request.ConfirmCode);
         await db.SaveAsync();
         return Ok(new { Message = "ثبت نام انجام شد لطفا کد ارسال شده را جهت تایید شماره موبال ارسال نمایید" });
-    }
-
-    [Route("Logout")]
-    [HttpPost, ApiAuthorize]
-    public async Task<IActionResult> Logout()
-    {
-        logoutUser.Respond(actorService.Get().Username);
-        await db.SaveAsync();
-
-        return Ok();
     }
 
     [Route("Add")]
