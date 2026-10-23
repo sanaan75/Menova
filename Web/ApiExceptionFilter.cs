@@ -1,14 +1,14 @@
 using Entities;
-using Entities.Logs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using Services;
+using Services.Logs;
 using Services.TokenDetails;
 
 namespace Web;
 
-public class ApiExceptionFilter(IServiceProvider serviceProvider, ITimeService timeService, ITokenDetailCache tokenDetailCache) : IExceptionFilter
+public class ApiExceptionFilter(ITokenDetailCache tokenDetailCache) : IExceptionFilter
 {
     public void OnException(ExceptionContext context)
     {
@@ -17,53 +17,34 @@ public class ApiExceptionFilter(IServiceProvider serviceProvider, ITimeService t
         if (!isApiRequest)
             return;
 
-        using var services = serviceProvider.CreateScope();
-
         try
         {
-            var db = services.ServiceProvider.GetService<IStatisticDb>();
-            var getHost = services.ServiceProvider.GetService<IGetHost>();
-
-            var ipAddress = getHost.Respond();
-            int? statusCode = null;
-            string appMessage = string.Empty;
-
-            string apiKey = string.Empty;
-            int? userId = null;
-
             var httpContext = context.HttpContext;
-            var authHeader = httpContext.Request.Headers["Authorization"].ToString();
+            var addErrorLog = httpContext.RequestServices.GetRequiredService<IAddErrorLog>();
+            var statusCode = context.Exception is AppException
+                ? StatusCodes.Status400BadRequest
+                : StatusCodes.Status500InternalServerError;
             
-            if (string.IsNullOrWhiteSpace(authHeader) == false && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-            {
-                apiKey = authHeader.Substring("Bearer ".Length).Trim();
-                userId = tokenDetailCache.GetByKey(apiKey)?.UserId;
-            }
+            var authHeader = httpContext.Request.Headers.Authorization.ToString();
+            
+            var userId = authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
+                ? tokenDetailCache.GetByKey(authHeader["Bearer ".Length..].Trim())?.UserId
+                : null;
 
-            if (context.Exception is AppException appEx)
+            addErrorLog.Respond(new IAddErrorLog.Request
             {
-                statusCode = 400;
-                appMessage = appEx.Message;
-            }
-
-            var errorLog = new ErrorLog
-            {
-                Date = timeService.Now,
-                IpAddress = ipAddress,
-                UserId = userId,
-                Path = context.HttpContext.Request.Path.ToString(),
                 StatusCode = statusCode,
-                Message = appMessage,
-                InnerException = context.Exception.Message + "\t -- " + context.Exception.InnerException?.ToString(),
-                StackAndSource = $"{context.Exception.StackTrace}\nSource: {context.Exception.Source}"
-            };
-
-            db.Set<ErrorLog>().Add(errorLog);
-            db.Save();
+                IpAddress = httpContext.Connection.RemoteIpAddress,
+                UserId = userId,
+                Path = httpContext.Request.Path.ToString(),
+                Message = context.Exception is AppException appException ? appException.Message : DefaultMessages.Error500,
+                Exception = context.Exception
+            });
+            ErrorLogMiddleware.MarkAsLogged(httpContext);
         }
-        catch (Exception ex)
+        catch
         {
-            // ignored
+            // Error logging must not change the API response.
         }
 
         if (context.Exception is AppException applicationException)
@@ -75,7 +56,7 @@ public class ApiExceptionFilter(IServiceProvider serviceProvider, ITimeService t
         }
         else
         {
-            context.Result = new ObjectResult(new { Message = context.Exception + " " + context.Exception.InnerException })
+            context.Result = new ObjectResult(new { Message = DefaultMessages.Error500 })
             {
                 StatusCode = 500
             };

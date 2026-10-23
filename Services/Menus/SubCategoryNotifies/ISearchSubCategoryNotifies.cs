@@ -1,5 +1,7 @@
 ﻿using Entities.Menus;
 
+using Services.Menus.SubCategories;
+
 namespace Services.Menus.SubCategoryNotifies;
 
 public interface ISearchSubCategoryNotifies
@@ -11,6 +13,7 @@ public interface ISearchSubCategoryNotifies
         public int? Id { get; set; }
         public int? IgnoredId { get; set; }
         public int? SubCategoryId { get; set; }
+        public ISearchSubCategories.Request SubCategory { get; set; }
         public string Title { get; set; }
         public bool? IsActive { get; set; }
     }

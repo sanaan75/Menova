@@ -1,7 +1,9 @@
+using System.Text.Json;
 using Entities;
 using Entities.Basics.Security;
 using Entities.Users;
 using Services;
+using Services.Models;
 using Services.Sessions;
 
 namespace Web;
@@ -20,7 +22,15 @@ public class ActorService(ISessionService sessionService) : IActorService
         if (_actor != null)
             return _actor;
 
-        _actor = sessionService.GetOrStart<Actor>();
+        try
+        {
+            _actor = sessionService.GetOrStart<Actor>();
+        }
+        catch (JsonException)
+        {
+            // Older sessions may contain permission codes or dictionaries instead of the current actor lists.
+            _actor = sessionService.Start(new Actor(), authenticated: false, username: null);
+        }
 
         return _actor;
     }
@@ -28,15 +38,10 @@ public class ActorService(ISessionService sessionService) : IActorService
     public bool IsAuthenticated => Get()?.IsAuthenticated ?? false;
     public int UserId => Get().UserId;
 
-    public bool IsSystemAdmin => Get().Type == UserType.SuperAdmin;
+    public bool IsAdmin => Get().Type == UserType.Admin;
+    public bool IsSuperAdmin => Get().IsSuperAdmin;
 
-    public bool HasPermission(Permission permission)
-    {
-        return Get().HasPermission(permission);
-    }
+    public bool HasPermission(Permission permission) => Get().HasPermission(permission);
 
-    public IList<Permission> GetPermissions()
-    {
-        return Get().Permissions.ToList();
-    }
+    public IList<PermissionModel> GetPermissions() => Get().Permissions?.ToList() ?? [];
 }

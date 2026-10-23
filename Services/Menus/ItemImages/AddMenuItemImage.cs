@@ -24,7 +24,7 @@ public class AddMenuItemImage(
         var url = saveLocalFile.Respond(new ISaveLocalFile.Request
         {
             File = request.Image,
-            Folder = Folders.Categories
+            Folder = Folders.Items
         });
 
         return db.Set<MenuItemImage>().Add(new MenuItemImage

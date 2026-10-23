@@ -16,6 +16,9 @@ public class SearchSubCategories(IDb db,ISearchCategories searchCategories) : IS
         items = items.FilterById(request.Id);
         items = items.IgnoreById(request.IgnoredId);
 
+        if (request.Ids is { Count: > 0 })
+            items = items.Where(i => request.Ids.Contains(i.Id));
+
         items = items.Filter(request.CategoryId, i => i.CategoryId == request.CategoryId);
         
         if (request.Category is not null)

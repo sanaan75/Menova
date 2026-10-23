@@ -1,16 +1,15 @@
 ﻿using System.Text.Json;
 using Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
+using Services.Logs;
 
 namespace Web;
 
 public class AppExceptionHandler(RequestDelegate next, IWebHostEnvironment environment)
 {
-    private readonly IWebHostEnvironment _environment = environment;
-
-    public async Task Invoke(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, IAddErrorLog addErrorLog)
     {
         try
         {
@@ -18,11 +17,12 @@ public class AppExceptionHandler(RequestDelegate next, IWebHostEnvironment envir
         }
         catch (AppException appException)
         {
+            var message = string.IsNullOrWhiteSpace(appException.Message) ? "خطایی رخ داده است" : appException.Message;
+            Log(context, addErrorLog, StatusCodes.Status400BadRequest, appException, message);
+
             context.Response.Clear();
             context.Response.ContentType = "application/json; charset=utf-8";
             context.Response.StatusCode = 400;
-
-            var message = string.IsNullOrWhiteSpace(appException.Message) ? "خطایی رخ داده است" : appException.Message;
 
             var options = new JsonSerializerOptions
             {
@@ -32,9 +32,9 @@ public class AppExceptionHandler(RequestDelegate next, IWebHostEnvironment envir
 
             await JsonSerializer.SerializeAsync(context.Response.Body, new { message }, options);
         }
-        catch (Exception)
+        catch (Exception exception)
         {
-            if (_environment.IsDevelopment())
+            if (environment.IsDevelopment())
                 throw;
 
             var isApiRequest = context.Request.Path.Value?.StartsWith("/api/",
@@ -42,6 +42,8 @@ public class AppExceptionHandler(RequestDelegate next, IWebHostEnvironment envir
 
             if (!isApiRequest)
                 throw;
+
+            Log(context, addErrorLog, StatusCodes.Status500InternalServerError, exception, DefaultMessages.AppError());
 
             context.Response.Clear();
             context.Response.ContentType = "application/json; charset=utf-8";
@@ -53,7 +55,20 @@ public class AppExceptionHandler(RequestDelegate next, IWebHostEnvironment envir
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             };
 
-            await JsonSerializer.SerializeAsync(context.Response.Body, new { message = CommonMessages.AppError() }, options);
+            await JsonSerializer.SerializeAsync(context.Response.Body, new { message = DefaultMessages.AppError() }, options);
         }
+    }
+
+    private static void Log(HttpContext context, IAddErrorLog addErrorLog, int statusCode, Exception exception, string message)
+    {
+        addErrorLog.Respond(new IAddErrorLog.Request
+        {
+            StatusCode = statusCode,
+            Path = context.Request.Path.ToString(),
+            IpAddress = context.Connection.RemoteIpAddress,
+            Message = message,
+            Exception = exception
+        });
+        ErrorLogMiddleware.MarkAsLogged(context);
     }
 }

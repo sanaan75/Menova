@@ -1,5 +1,6 @@
 using Entities;
 using Entities.Basics.Security;
+using Services.Models;
 
 namespace Services;
 
@@ -9,9 +10,10 @@ public interface IActorService
     Actor Get();
 
     bool IsAuthenticated { get; }
-    bool IsSystemAdmin { get; }
+    bool IsSuperAdmin { get; }
+    bool IsAdmin { get; }
     int UserId { get; }
 
-    IList<Permission> GetPermissions();
+    IList<PermissionModel> GetPermissions();
     bool HasPermission(Permission permission);
 }

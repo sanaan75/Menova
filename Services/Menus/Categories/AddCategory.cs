@@ -14,6 +14,8 @@ public class AddCategory(
 {
     public Category Respond(IAddCategory.Request request)
     {
+        Check.Positive(request.Order, () => ErrorMessagePersian.NotAllowed(Glossary.Order));
+
         var menu = searchMenus.Respond(new ISearchMenus.Request
         {
             UserId = actorService.UserId

@@ -38,7 +38,7 @@ public class AddSubCategory(
         var url = saveLocalFile.Respond(new ISaveLocalFile.Request
         {
             File = request.Image,
-            Folder = Folders.Categories
+            Folder = Folders.SubCategories
         });
 
         return db.Set<SubCategory>().Add(new SubCategory

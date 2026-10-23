@@ -15,9 +15,9 @@ public class SearchUserPlans(IDb db) : ISearchUserPlans
         items = items.FilterById(request.Id);
         items = items.IgnoreById(request.IgnoredId);
         
-        items = items.Filter(request.UserId, i => i.UserId == request.UserId.Value);
-        items = items.Filter(request.PlanId, i => i.PlanId == request.PlanId.Value);
-
+        items = items.Filter(request.UserId, i => i.UserId == request.UserId!.Value);
+        items = items.Filter(request.PlanId, i => i.PlanId == request.PlanId!.Value);
+        
         return items.OrderByDescending(i => i.Id);
     }
 }

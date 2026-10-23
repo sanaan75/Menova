@@ -52,10 +52,10 @@ public abstract class AppMenu : IMenu
 
     protected bool HasPermission(Permission permission)
     {
-        if (_actorService.IsSystemAdmin)
+        if (_actorService.IsSuperAdmin)
             return true;
 
-        return  _actorService.IsSystemAdmin | _actorService.HasPermission(permission);
+        return  _actorService.IsSuperAdmin | _actorService.HasPermission(permission);
     }
 
     protected bool IsSysAdmin => _actorService.IsAuthenticated;

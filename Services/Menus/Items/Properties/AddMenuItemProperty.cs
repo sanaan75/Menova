@@ -12,6 +12,9 @@ public class AddMenuItemProperty(
 {
     public MenuItemProperty Respond(IAddMenuItemProperty.Request request)
     {
+        Check.Given(request.Title, () => ErrorMessagePersian.Unknown(Glossary.Title));
+        Check.Positive(request.Price, () => ErrorMessagePersian.NotAllowed(Glossary.Price));
+
         var isItemOwner = searchMenuItems.Respond(new ISearchMenuItems.Request
         {
             Id = request.MenuItemId,

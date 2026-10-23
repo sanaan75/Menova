@@ -1,14 +1,22 @@
 ﻿using Entities;
 using Entities.Menus;
 
+using Services.Menus.SubCategories;
+
 namespace Services.Menus.SubCategoryNotifies;
 
-public class AddSubCategoryNotify(IDb db, ISearchSubCategoryNotifies searchSubCategoryNotifies) : IAddSubCategoryNotify
+public class AddSubCategoryNotify(
+    IDb db,
+    ISearchSubCategoryNotifies searchSubCategoryNotifies,
+    ICheckIsSubCategoryOwner checkIsSubCategoryOwner)
+    : IAddSubCategoryNotify
 {
     public SubCategoryNotify Respond(IAddSubCategoryNotify.Request request)
     {
         Check.Positive(request.Order, () => ErrorMessagePersian.NotAllowed(Glossary.Order));
         Check.Given(request.Title, () => ErrorMessagePersian.Unknown(Glossary.Title));
+        Check.True(checkIsSubCategoryOwner.Respond(request.SubCategoryId),
+            () => ErrorMessagePersian.NotAllowed($"{Glossary.Add} {Glossary.MenuSubCategoryNotify}"));
 
         var duplicate = searchSubCategoryNotifies.Respond(new ISearchSubCategoryNotifies.Request
         {

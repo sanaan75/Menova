@@ -39,6 +39,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Controllers\Plans\" />
       <Folder Include="wwwroot\menu\categories\" />
       <Folder Include="wwwroot\menu\items\" />
       <Folder Include="wwwroot\menu\subCategories\" />

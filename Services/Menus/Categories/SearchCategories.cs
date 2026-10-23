@@ -15,6 +15,9 @@ public class SearchCategories(IDb db, ISearchMenus searchMenus) : ISearchCategor
         items = items.FilterById(request.Id);
         items = items.IgnoreById(request.IgnoredId);
 
+        if (request.Ids is { Count: > 0 })
+            items = items.Where(i => request.Ids.Contains(i.Id));
+
         items = items.Filter(request.MenuId, i => i.MenuId == request.MenuId.Value);
 
         if (request.Menu is not null)

@@ -1,7 +1,7 @@
 using Entities;
-using Entities.Basics.Security;
 using Entities.Users;
 using Services;
+using Services.Models;
 using Services.Users;
 using Services.Users.Auth;
 
@@ -12,19 +12,20 @@ public class CreateActor(
     IValidatePassword validatePassword,
     ISearchUsers searchUsers,
     IFailedLoginService failedLoginService,
+    IUserPermissionService userPermissionService,
     IRemoteHostService remoteHostService)
     : ICreateActor
 {
     public Actor Respond(string username, string plainPassword, bool authenticated)
     {
-        Check.Given(username, () => CommonMessages.InvalidUsernameOrPassword);
+        Check.Given(username, () => DefaultMessages.InvalidUsernameOrPassword);
 
         var user = searchUsers.Respond(new ISearchUsers.Request { Username = username }).SingleOrDefault();
+        Check.NotNull(user, () => DefaultMessages.InvalidUsernameOrPassword);
 
         if (authenticated == false)
         {
-            Check.Given(plainPassword, () => CommonMessages.InvalidUsernameOrPassword);
-            Check.NotNull(user, () => CommonMessages.InvalidUsernameOrPassword);
+            Check.Given(plainPassword, () => DefaultMessages.InvalidUsernameOrPassword);
 
             validatePassword.Respond(new IValidatePassword.Request
             {
@@ -37,7 +38,7 @@ public class CreateActor(
         {
             failedLoginService.LogFailedLogin(remoteHostService.GetAddress());
 
-            throw new AppException(CommonMessages.InActiveUser);
+            throw new AppException(DefaultMessages.InActiveUser);
         }
 
         return Respond(user.Id);
@@ -53,9 +54,13 @@ public class CreateActor(
             i.CountyId,
             i.Type,
             i.BusinessType,
-            i.Username
+            i.Username,
+            i.Enabled
         });
 
+        Check.NotNull(user, () => DefaultMessages.InActiveUser);
+        Check.True(user.Enabled, () => DefaultMessages.InActiveUser);
+        
         return new Actor
         {
             IsAuthenticated = true,
@@ -63,9 +68,15 @@ public class CreateActor(
             Type = user.Type,
             BusinessType = user.BusinessType,
             Username = user.Username,
-            Title =  user.Title,
-            Name =  user.Name,
-            Permissions = new List<Permission>(),
+            Title = user.Title,
+            Name = user.Name,
+            Permissions = userPermissionService.GetPermissions(userId).OrderBy(i => (int)i).Select(i => new PermissionModel
+                {
+                    Value = (int)i,
+                    Code = i.ToString(),
+                    Title = i.GetCaption()
+                })
+                .ToList()
         };
     }
 }

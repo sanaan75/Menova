@@ -3,22 +3,15 @@ using Entities.Users;
 
 namespace Services.Users.Auth;
 
-public class ValidatePassword : IValidatePassword
+public class ValidatePassword(IDb db) : IValidatePassword
 {
-    private readonly IDb _db;
-
-    public ValidatePassword(IDb db)
-    {
-        _db = db;
-    }
-
     public void Respond(IValidatePassword.Request request)
     {
         var hashToCheck = HashPassword.Hash(request.Username, request.Password);
-        var user = _db.Set<User>().SingleOrDefault(i => i.Username == request.Username);
+        var user = db.Set<User>().SingleOrDefault(i => i.Username == request.Username);
 
-        Check.NotNull(user, () => ErrorMessagePersian.Wrong($"{Glossary.Username} یا {Glossary.Password}"));
-        Check.True(user.Enabled, () => "کاربر فعال نیست");
-        Check.Equal(user.Password, hashToCheck, () => ErrorMessagePersian.Wrong($"{Glossary.Username} یا {Glossary.Password}"));
+        Check.NotNull(user, () => MessageFactory.Wrong($"{Glossary.Username} یا {Glossary.Password}"));
+        Check.True(user.Enabled, () => MessageFactory.NotAllowedBecause("ورود به سامانه", "غیرفعال بودن حساب کاربری"));
+        Check.Equal(user.Password, hashToCheck, () => MessageFactory.Wrong($"{Glossary.Username} یا {Glossary.Password}"));
     }
 }

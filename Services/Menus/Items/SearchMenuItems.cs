@@ -19,6 +19,9 @@ public class SearchMenuItems(IDb db, ISearchSubCategories searchSubCategories) :
         items = items.Filter(request.UserId, i => i.UserId == request.UserId);
         items = items.Filter(request.SubCategoryId, i => i.SubCategoryId == request.SubCategoryId);
 
+        if (request.SubCategoryIds is { Count: > 0 })
+            items = items.Where(i => request.SubCategoryIds.Contains(i.SubCategoryId));
+
         if (request.SubCategory is not null)
             items = from i in items join j in searchSubCategories.Respond(request.SubCategory) on i.SubCategoryId equals j.Id select i;
         

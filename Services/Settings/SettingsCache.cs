@@ -15,9 +15,18 @@ public class SettingsCache(IContainer mainContainer) : ISettingsCache
 
         _model = container.Get<IDb>().Query<Setting>().Select(i => new ISettingsCache.Model
         {
+            AllowUserAccountNo = i.AllowUserAccountNo,
             UserConfirmCodeExpire = i.UserConfirmCodeExpire,
             ResetPassExpire = i.ResetPassExpire,
-            AllowedRequestsPerMinute =i.AllowedRequestsPerMinute
+            AllowedRequestsPerMinute = i.AllowedRequestsPerMinute,
+            ActionLogMaxCount = i.ActionLogMaxCount,
+            ActionLogMaxDays = i.ActionLogMaxDays,
+            MaxFileSizeInMB = i.MaxFileSizeInMB,
+            MaxLengthOfPassword = i.MaxLengthOfPassword,
+            MinLengthOfPassword = i.MinLengthOfPassword,
+            PasswordContainCapitalLetters = i.PasswordContainCapitalLetters,
+            PasswordContainSpecialLetters = i.PasswordContainSpecialLetters,
+            PasswordContainNumbers = i.PasswordContainNumbers
         }).Single();
 
         return _model;

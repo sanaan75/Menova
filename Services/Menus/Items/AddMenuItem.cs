@@ -1,13 +1,24 @@
 ﻿using Entities;
 using Entities.Menus;
 
+using Services.Menus.SubCategories;
+
 namespace Services.Menus.Items;
 
-public class AddMenuItem(IDb db, ISearchMenuItems searchMenuItems,IActorService actorService) : IAddMenuItem
+public class AddMenuItem(
+    IDb db,
+    ISearchMenuItems searchMenuItems,
+    IActorService actorService,
+    ICheckIsSubCategoryOwner checkIsSubCategoryOwner)
+    : IAddMenuItem
 {
     public MenuItem Respond(IAddMenuItem.Request request)
     {
-        Check.Given(request.Name, () => Glossary.MenuItem);
+        Check.Positive(request.Order, () => ErrorMessagePersian.NotAllowed(Glossary.Order));
+        Check.Given(request.Name, () => ErrorMessagePersian.Unknown(Glossary.MenuItem));
+
+        Check.True(checkIsSubCategoryOwner.Respond(request.SubCategoryId),
+            () => ErrorMessagePersian.NotAllowed($"{Glossary.Add} {Glossary.MenuItem}"));
 
         var duplicate = searchMenuItems.Respond(new ISearchMenuItems.Request
         {

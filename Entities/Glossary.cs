@@ -45,6 +45,7 @@ public static class Glossary
     public const string CafeRestaurant = "کافه رستوران";
     public const string CoffeeShop = "کافی شاپ";
     public const string Catering = "کترینگ";
+    public const string ChangePassword = "تغییر رمزعبور";
 
     #endregion
 
@@ -66,6 +67,7 @@ public static class Glossary
     public const string Expire = "انقضا";
     public const string EventDate = $"{Date} {Event}";
     public const string ExpireDate = $"{Date} {Expire}";
+    public const string EditUser = $"{Edit} {User}";
 
     #endregion
 
@@ -199,6 +201,7 @@ public static class Glossary
     #region S-s
 
     public const string Search = "جستجو";
+    public const string Settings = "تنظیمات";
     public const string Shaba = "شماره شبا";
     public const string Slip = "فیش";
     public const string Share = "سهم";
