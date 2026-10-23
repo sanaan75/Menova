@@ -25,7 +25,7 @@ public class MenuItemImageController(
                 MenuItemId = request.Id,
                 MenuItem = new ISearchMenuItems.Request
                 {
-                    UserId = actorService.UserId
+                    UserId = actorService.IsAdmin ? null : actorService.UserId
                 }
             })
             .Select(i => new

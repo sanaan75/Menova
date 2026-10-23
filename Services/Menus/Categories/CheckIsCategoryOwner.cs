@@ -4,13 +4,19 @@ public class CheckIsCategoryOwner(ISearchCategories searchCategories, IActorServ
 {
     public bool Respond(int id)
     {
-        return searchCategories.Respond(new ISearchCategories.Request
+        var request = new ISearchCategories.Request
         {
             Id = id,
-            Menu = new ISearchMenus.Request
+        };
+
+        if (!actorService.IsAdmin)
+        {
+            request.Menu = new ISearchMenus.Request
             {
                 UserId = actorService.UserId
-            }
-        }).Any();
+            };
+        }
+
+        return searchCategories.Respond(request).Any();
     }
 }

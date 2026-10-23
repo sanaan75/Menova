@@ -18,7 +18,7 @@ public class AddMenuItemProperty(
         var isItemOwner = searchMenuItems.Respond(new ISearchMenuItems.Request
         {
             Id = request.MenuItemId,
-            UserId = actorService.UserId
+            UserId = actorService.IsAdmin ? null : actorService.UserId
         }).Any();
         Check.True(isItemOwner, () => ErrorMessagePersian.NotAllowed($"{Glossary.Add} {Glossary.Property}"));
 

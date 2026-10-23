@@ -7,12 +7,10 @@ public class AddMenu(IDb db, ISearchMenus searchMenus) : IAddMenu
 {
     public Menu Respond(IAddMenu.Request request)
     {
-        Check.True(request.User is not null || request.UserId is > 0,
-            () => ErrorMessagePersian.Unknown(Glossary.User));
+        Check.True(request.User is not null || request.UserId is > 0, () => ErrorMessagePersian.Unknown(Glossary.User));
 
         if (request.User is not null && request.UserId is not null)
-            Check.True(request.User.Id == request.UserId.Value,
-                () => ErrorMessagePersian.Invalid(Glossary.User));
+            Check.True(request.User.Id == request.UserId.Value, () => ErrorMessagePersian.Invalid(Glossary.User));
 
         var userId = request.User?.Id ?? request.UserId;
 

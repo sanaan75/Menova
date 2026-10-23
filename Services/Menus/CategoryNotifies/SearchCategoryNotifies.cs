@@ -13,6 +13,7 @@ public class SearchCategoryNotifies(
     public IQueryable<CategoryNotify> Respond(ISearchCategoryNotifies.Request request)
     {
         var items = db.Query<CategoryNotify>();
+        items = from i in items join j in searchCategories.Respond() on i.CategoryId equals j.Id select i;
 
         if (request.IsNullOrDefault())
             return items;

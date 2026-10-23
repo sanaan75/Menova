@@ -31,7 +31,7 @@ public class SubCategoryController(
                     Id = request.CategoryId,
                     Menu = new ISearchMenus.Request
                     {
-                        UserId = actorService.UserId
+                        UserId = actorService.IsAdmin ? null : actorService.UserId
                     }
                 }
             })

@@ -1,7 +1,7 @@
 ﻿using Entities;
 using Entities.Basics.AdminLevels;
-using Entities.Basics.Security;
 using Entities.Menus;
+using Entities.Plans;
 using Entities.Security;
 using Entities.Settings;
 using Entities.Users;
@@ -47,10 +47,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public void AddPostSaveAction(Action action) => _postSaveActions.Add(action);
 
     public DbSet<Setting> Settings { get; set; }
+    public DbSet<Plan> Plans { get; set; }
+    public DbSet<UserPlan> UserPlans { get; set; }
 
     public DbSet<User> Users { get; set; }
-    public DbSet<UserGroup> UserGroups { get; set; }
-    public DbSet<UserGroupPermission> UserGroupPermissions { get; set; }
+    public DbSet<UserApiToken> UserApiTokens { get; set; }
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
     public DbSet<UserConfirmCode> UserConfirmCodes { get; set; }
 

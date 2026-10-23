@@ -9,7 +9,7 @@ public class ChangePassword(IDb db, IActorService actorService, IValidatePasswor
 {
     public void Respond(int id, string password)
     {
-        Check.True(actorService.Get().IsSuperAdmin, () => MessageFactory.InvalidPermission(Glossary.ChangePassword));
+        Check.True(actorService.IsAuthenticated && (actorService.IsAdmin || actorService.UserId == id), () => ErrorMessagePersian.NotAllowed(Glossary.ChangePassword));
 
         validatePasswordPattern.Respond(password);
 

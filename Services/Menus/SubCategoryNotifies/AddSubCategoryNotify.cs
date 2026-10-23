@@ -15,8 +15,7 @@ public class AddSubCategoryNotify(
     {
         Check.Positive(request.Order, () => ErrorMessagePersian.NotAllowed(Glossary.Order));
         Check.Given(request.Title, () => ErrorMessagePersian.Unknown(Glossary.Title));
-        Check.True(checkIsSubCategoryOwner.Respond(request.SubCategoryId),
-            () => ErrorMessagePersian.NotAllowed($"{Glossary.Add} {Glossary.MenuSubCategoryNotify}"));
+        Check.True(checkIsSubCategoryOwner.Respond(request.SubCategoryId), () => ErrorMessagePersian.NotAllowed($"{Glossary.Add} {Glossary.MenuSubCategoryNotify}"));
 
         var duplicate = searchSubCategoryNotifies.Respond(new ISearchSubCategoryNotifies.Request
         {

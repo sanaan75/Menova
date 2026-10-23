@@ -21,7 +21,7 @@ public class MenuItemController(
     {
         var items = searchMenuItems.Respond(new ISearchMenuItems.Request
             {
-                UserId = actorService.UserId
+                UserId = actorService.IsAdmin ? null : actorService.UserId
             })
             .Select(i => new
             {

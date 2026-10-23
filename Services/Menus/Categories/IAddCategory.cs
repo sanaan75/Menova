@@ -9,6 +9,7 @@ public interface IAddCategory
 
     class Request
     {
+        public int? MenuId { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
         public int Order { get; set; }

@@ -16,13 +16,10 @@ public class SearchUserApiToken(
         if (request.IsNullOrDefault())
             return items;
 
-        var actor = actorService.Get();
         if (request.ApplyActor)
         {
-            if (actor.Type == UserType.SuperAdmin)
-                return items;
-
-            items = items.Where(i => i.UserId == actor.UserId);
+            if (!actorService.IsAdmin)
+                items = items.Where(i => i.UserId == actorService.UserId);
         }
 
         if (request.OnlyNotExpired)
@@ -30,7 +27,7 @@ public class SearchUserApiToken(
             items = items.Where(i => timeService.Now <= i.ExpireDate);
         }
 
-        items = items.Filter(request.UserId, i => i.UserId == actor.UserId);
+        items = items.Filter(request.UserId, i => i.UserId == request.UserId);
         items = items.FilterByKeyword(request.Keyword, t => i => i.Note.Contains(t));
         items = items.Filter(request.Token, i => i.Token == request.Token.Value);
 

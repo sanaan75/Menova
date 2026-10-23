@@ -8,6 +8,7 @@ public class SearchMenuItemProperty(IDb db, ISearchMenuItems searchMenuItems) : 
     public IQueryable<MenuItemProperty> Respond(ISearchMenuItemProperty.Request request)
     {
         var items = db.Query<MenuItemProperty>();
+        items = from i in items join j in searchMenuItems.Respond() on i.MenuItemId equals j.Id select i;
 
         if (request.IsNullOrDefault())
             return items;

@@ -1,4 +1,5 @@
 using Entities;
+using Entities.Users;
 
 namespace Services.Users;
 
@@ -36,6 +37,7 @@ public class SignupUser(
             Name = request.Name,
             Title = request.Title,
             Username = normalizedNationalCode,
+            Type = UserType.Customer
         });
 
         addUserConfirmCode.Respond(user);

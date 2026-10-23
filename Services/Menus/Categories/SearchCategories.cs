@@ -8,6 +8,7 @@ public class SearchCategories(IDb db, ISearchMenus searchMenus) : ISearchCategor
     public IQueryable<Category> Respond(ISearchCategories.Request request)
     {
         var items = db.Query<Category>();
+        items = from i in items join j in searchMenus.Respond() on i.MenuId equals j.Id select i;
 
         if (request.IsNullOrDefault())
             return items;

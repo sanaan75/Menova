@@ -2,7 +2,6 @@
 
 public enum UserType
 {
-    NormalUser = 1,
-    Admin = 2,
-    SuperAdmin = 32
+    Customer = 1,
+    Admin = 2
 }

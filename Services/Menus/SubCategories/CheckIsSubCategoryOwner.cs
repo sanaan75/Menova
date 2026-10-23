@@ -6,16 +6,22 @@ public class CheckIsSubCategoryOwner(ISearchSubCategories searchSubCategories, I
 {
     public bool Respond(int id)
     {
-        return searchSubCategories.Respond(new ISearchSubCategories.Request
+        var request = new ISearchSubCategories.Request
         {
             Id = id,
-            Category = new ISearchCategories.Request
+        };
+
+        if (!actorService.IsAdmin)
+        {
+            request.Category = new ISearchCategories.Request
             {
                 Menu = new ISearchMenus.Request
                 {
                     UserId = actorService.UserId
                 }
-            }
-        }).Any();
+            };
+        }
+
+        return searchSubCategories.Respond(request).Any();
     }
 }

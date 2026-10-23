@@ -6,13 +6,19 @@ public class CheckIsOwnerMenuItemImage(ISearchMenuItemImages searchMenuItemImage
 {
     public bool Respond(int id)
     {
-        return searchMenuItemImages.Respond(new ISearchMenuItemImages.Request
+        var request = new ISearchMenuItemImages.Request
         {
             Id = id,
-            MenuItem = new ISearchMenuItems.Request
+        };
+
+        if (!actorService.IsAdmin)
+        {
+            request.MenuItem = new ISearchMenuItems.Request
             {
                 UserId = actorService.UserId
-            }
-        }).Any();
+            };
+        }
+
+        return searchMenuItemImages.Respond(request).Any();
     }
 }

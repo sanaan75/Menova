@@ -5,14 +5,12 @@ using Services.Menus.SubCategories;
 
 namespace Services.Menus.SubCategoryNotifies;
 
-public class SearchSubCategoryNotifies(
-    IDb db,
-    ISearchSubCategories searchSubCategories)
-    : ISearchSubCategoryNotifies
+public class SearchSubCategoryNotifies(IDb db, ISearchSubCategories searchSubCategories) : ISearchSubCategoryNotifies
 {
     public IQueryable<SubCategoryNotify> Respond(ISearchSubCategoryNotifies.Request request)
     {
         var items = db.Query<SubCategoryNotify>();
+        items = from i in items join j in searchSubCategories.Respond() on i.SubCategoryId equals j.Id select i;
 
         if (request.IsNullOrDefault())
             return items;

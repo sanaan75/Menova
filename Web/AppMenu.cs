@@ -1,4 +1,3 @@
-using Entities.Basics.Security;
 using Services;
 
 namespace Web;
@@ -50,13 +49,5 @@ public abstract class AppMenu : IMenu
         return null;
     }
 
-    protected bool HasPermission(Permission permission)
-    {
-        if (_actorService.IsSuperAdmin)
-            return true;
-
-        return  _actorService.IsSuperAdmin | _actorService.HasPermission(permission);
-    }
-
-    protected bool IsSysAdmin => _actorService.IsAuthenticated;
+    protected bool IsSysAdmin => _actorService.IsAdmin;
 }

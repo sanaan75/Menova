@@ -4,13 +4,19 @@ public class CheckIsOwnerProperty(ISearchMenuItemProperty searchMenuItemProperty
 {
     public bool Respond(int id)
     {
-        return searchMenuItemProperty.Respond(new ISearchMenuItemProperty.Request
+        var request = new ISearchMenuItemProperty.Request
         {
             Id = id,
-            MenuItem = new ISearchMenuItems.Request
+        };
+
+        if (!actorService.IsAdmin)
+        {
+            request.MenuItem = new ISearchMenuItems.Request
             {
                 UserId = actorService.UserId
-            }
-        }).Any();
+            };
+        }
+
+        return searchMenuItemProperty.Respond(request).Any();
     }
 }

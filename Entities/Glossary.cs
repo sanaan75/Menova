@@ -174,8 +174,6 @@ public static class Glossary
     public const string PersianMonth = "ماه شمسی";
     public const string Password = "رمز عبور";
     public const string Province = "استان";
-    public const string Permission = "دسترسی";
-    public const string Permissions = "دسترسی ها";
     public const string Plan = "طرح";
     public const string Plans = "طرح ها";
     public const string PastryShop = "شیرینی فروشی";
@@ -231,8 +229,6 @@ public static class Glossary
     public const string UserId = $"{Id} {User}";
     public const string UserType = $"{Type} {User}";
     public const string Username = "نام کاربری";
-    public const string UserGroup = "گروه کاربری";
-    public const string UserGroupPermission = $"{Permissions}ی {UserGroup}";
     public const string UserSlip = "سهم شخص در فیش"; // todo : fix translate
     public const string UserSlipShare = "سهم شخص در فیش"; // todo : fix translate
     public const string UserSlipShares = "سهم اشخاص در فیش"; // todo : fix translate

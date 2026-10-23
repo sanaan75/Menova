@@ -5,13 +5,7 @@ using Services.Menus.Categories;
 
 namespace Services.Menus.SubCategories;
 
-public class AddSubCategory(
-    IDb db,
-    ISearchSubCategories searchSubCategories,
-    IActorService actorService,
-    ICheckIsCategoryOwner checkIsCategoryOwner,
-    ISaveLocalFile saveLocalFile)
-    : IAddSubCategory
+public class AddSubCategory(IDb db, ISearchSubCategories searchSubCategories, ICheckIsCategoryOwner checkIsCategoryOwner, ISaveLocalFile saveLocalFile) : IAddSubCategory
 {
     public SubCategory Respond(IAddSubCategory.Request request)
     {
@@ -23,14 +17,7 @@ public class AddSubCategory(
         var duplicate = searchSubCategories.Respond(new ISearchSubCategories.Request
         {
             CategoryId = request.CategoryId,
-            Name = request.Name.Clean(),
-            Category = new ISearchCategories.Request
-            {
-                Menu = new ISearchMenus.Request
-                {
-                    UserId = actorService.UserId
-                }
-            }
+            Name = request.Name.Clean()
         }).Any();
 
         Check.False(duplicate, () => ErrorMessagePersian.Duplicate(Glossary.SubCategory));

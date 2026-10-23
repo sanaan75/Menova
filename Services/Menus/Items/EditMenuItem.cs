@@ -3,7 +3,7 @@ using Entities.Menus;
 
 namespace Services.Menus.Items;
 
-public class EditMenuItem(IDb db, ISearchMenuItems searchMenuItems) : IEditMenuItem
+public class EditMenuItem(IDb db, ISearchMenuItems searchMenuItems, IActorService actorService) : IEditMenuItem
 {
     public void Respond(IEditMenuItem.Request request)
     {
@@ -13,6 +13,8 @@ public class EditMenuItem(IDb db, ISearchMenuItems searchMenuItems) : IEditMenuI
 
         var item = db.Set<MenuItem>().GetById(request.Id);
         Check.NotNull(item, () => ErrorMessagePersian.NotFound(Glossary.MenuItem));
+        Check.True(actorService.IsAdmin || item.UserId == actorService.UserId,
+            () => ErrorMessagePersian.NotAllowed(Glossary.Edit));
 
         var duplicate = searchMenuItems.Respond(new ISearchMenuItems.Request
         {

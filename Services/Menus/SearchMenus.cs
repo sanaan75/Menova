@@ -4,11 +4,17 @@ using Services.Users;
 
 namespace Services.Menus;
 
-public class SearchMenus(IDb db, ISearchUsers searchUsers) : ISearchMenus
+public class SearchMenus(IDb db, ISearchUsers searchUsers, IActorService actorService) : ISearchMenus
 {
     public IQueryable<Menu> Respond(ISearchMenus.Request request)
     {
         var items = db.Query<Menu>();
+
+        if (!actorService.IsAuthenticated)
+            return items.Where(i => false);
+
+        if (!actorService.IsAdmin)
+            items = items.Where(i => i.UserId == actorService.UserId);
 
         if (request.IsNullOrDefault())
             return items;

@@ -1,7 +1,6 @@
 using Entities;
 using Entities.Users;
 using Services;
-using Services.Models;
 using Services.Users;
 using Services.Users.Auth;
 
@@ -12,7 +11,6 @@ public class CreateActor(
     IValidatePassword validatePassword,
     ISearchUsers searchUsers,
     IFailedLoginService failedLoginService,
-    IUserPermissionService userPermissionService,
     IRemoteHostService remoteHostService)
     : ICreateActor
 {
@@ -60,23 +58,19 @@ public class CreateActor(
 
         Check.NotNull(user, () => DefaultMessages.InActiveUser);
         Check.True(user.Enabled, () => DefaultMessages.InActiveUser);
+
+        var userType = (int)user.Type == 32 ? UserType.Admin : user.Type;
+        Check.Defined(userType, () => ErrorMessagePersian.Unknown(Glossary.UserType));
         
         return new Actor
         {
             IsAuthenticated = true,
             UserId = userId,
-            Type = user.Type,
+            Type = userType,
             BusinessType = user.BusinessType,
             Username = user.Username,
             Title = user.Title,
-            Name = user.Name,
-            Permissions = userPermissionService.GetPermissions(userId).OrderBy(i => (int)i).Select(i => new PermissionModel
-                {
-                    Value = (int)i,
-                    Code = i.ToString(),
-                    Title = i.GetCaption()
-                })
-                .ToList()
+            Name = user.Name
         };
     }
 }

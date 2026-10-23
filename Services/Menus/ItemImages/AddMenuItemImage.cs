@@ -5,19 +5,14 @@ using Services.Menus.Items;
 
 namespace Services.Menus.ItemImages;
 
-public class AddMenuItemImage(
-    IDb db,
-    ISearchMenuItems searchMenuItems,
-    IActorService actorService,
-    ISaveLocalFile saveLocalFile)
-    : IAddMenuItemImage
+public class AddMenuItemImage(IDb db, ISearchMenuItems searchMenuItems, IActorService actorService, ISaveLocalFile saveLocalFile) : IAddMenuItemImage
 {
     public MenuItemImage Respond(IAddMenuItemImage.Request request)
     {
         var isItemOwner = searchMenuItems.Respond(new ISearchMenuItems.Request
         {
             Id = request.MenuItemId,
-            UserId = actorService.UserId
+            UserId = actorService.IsAdmin ? null : actorService.UserId
         }).Any();
         Check.True(isItemOwner, () => ErrorMessagePersian.NotAllowed(Glossary.AddImage));
 

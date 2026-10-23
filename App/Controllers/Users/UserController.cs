@@ -1,6 +1,8 @@
 using Entities;
 using Entities.Logs;
+using Entities.Users;
 using Entities.Validations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -48,7 +50,7 @@ public class UserController(
                 Type = actor.Type,
                 TypeCaption = actor.Type.GetCaption(),
                 IsAuthenticated = actor.IsAuthenticated,
-                IsSuperAdmin = actor.IsSuperAdmin
+                IsAdmin = actor.Type == UserType.Admin
             }
         });
     }
@@ -91,6 +93,9 @@ public class UserController(
     [HttpPost, ApiAuthorize]
     public IActionResult Add(IAddUser.Request request)
     {
+        if (!actorService.IsAdmin)
+            return StatusCode(StatusCodes.Status403Forbidden);
+
         addUser.Respond(request);
         db.Save();
 

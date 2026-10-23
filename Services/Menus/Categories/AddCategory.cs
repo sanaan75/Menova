@@ -16,10 +16,18 @@ public class AddCategory(
     {
         Check.Positive(request.Order, () => ErrorMessagePersian.NotAllowed(Glossary.Order));
 
-        var menu = searchMenus.Respond(new ISearchMenus.Request
+        var menuRequest = new ISearchMenus.Request
         {
             UserId = actorService.UserId
-        }).SingleOrDefault();
+        };
+
+        if (actorService.IsAdmin && request.MenuId.HasValue)
+        {
+            menuRequest.UserId = null;
+            menuRequest.Id = request.MenuId.Value;
+        }
+
+        var menu = searchMenus.Respond(menuRequest).SingleOrDefault();
 
         Check.NotNull(menu, () => ErrorMessagePersian.NotFound(Glossary.Menu));
         Check.Given(request.Name, () => ErrorMessagePersian.Unknown(Glossary.Name));

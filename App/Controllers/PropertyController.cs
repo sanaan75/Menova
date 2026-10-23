@@ -21,14 +21,36 @@ public class PropertyController(
     [HttpPost, Route("List")]
     public IActionResult List(ISearchMenuItemProperty.Request request)
     {
-        var isItemOwner = searchMenuItems.Respond(new ISearchMenuItems.Request
+        if (!actorService.IsAdmin && request.MenuItemId.HasValue)
         {
-            Id = request.MenuItemId,
-            UserId = actorService.UserId
-        }).Any();
-        Check.True(isItemOwner, () => ErrorMessagePersian.NotAllowed($"{Glossary.Search} {Glossary.Property}"));
-        
-        var items = searchMenuItemProperty.Respond(request);
+            var isItemOwner = searchMenuItems.Respond(new ISearchMenuItems.Request
+            {
+                Id = request.MenuItemId,
+                UserId = actorService.UserId
+            }).Any();
+            Check.True(isItemOwner, () => ErrorMessagePersian.NotAllowed($"{Glossary.Search} {Glossary.Property}"));
+        }
+
+        var menuItemRequest = actorService.IsAdmin
+            ? request.MenuItem
+            : new ISearchMenuItems.Request
+            {
+                Id = request.MenuItem?.Id,
+                UserId = actorService.UserId,
+                SubCategoryId = request.MenuItem?.SubCategoryId,
+                SubCategoryIds = request.MenuItem?.SubCategoryIds,
+                Name = request.MenuItem?.Name,
+                IsActive = request.MenuItem?.IsActive
+            };
+
+        var items = searchMenuItemProperty.Respond(new ISearchMenuItemProperty.Request
+        {
+            Id = request.Id,
+            IgnoredId = request.IgnoredId,
+            MenuItemId = request.MenuItemId,
+            MenuItem = menuItemRequest,
+            Title = request.Title
+        });
 
         return Ok(new ApiResponseModel
         {

@@ -9,6 +9,7 @@ public class SearchMenuItemImages(IDb db, ISearchMenuItems searchMenuItems) : IS
     public IQueryable<MenuItemImage> Respond(ISearchMenuItemImages.Request request)
     {
         var items = db.Query<MenuItemImage>();
+        items = from i in items join j in searchMenuItems.Respond() on i.MenuItemId equals j.Id select i;
 
         if (request.IsNullOrDefault())
             return items;

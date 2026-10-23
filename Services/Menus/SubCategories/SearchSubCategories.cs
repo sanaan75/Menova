@@ -9,6 +9,7 @@ public class SearchSubCategories(IDb db,ISearchCategories searchCategories) : IS
     public IQueryable<SubCategory> Respond(ISearchSubCategories.Request request)
     {
         var items = db.Query<SubCategory>();
+        items = from i in items join j in searchCategories.Respond() on i.CategoryId equals j.Id select i;
 
         if (request.IsNullOrDefault())
             return items;

@@ -3,12 +3,18 @@ using Entities.Menus;
 
 namespace Services.Menus.Items.Properties;
 
-public class EditMenuItemProperty(IDb db, ISearchMenuItemProperty searchMenuItemProperty) : IEditMenuItemProperty
+public class EditMenuItemProperty(
+    IDb db,
+    ISearchMenuItemProperty searchMenuItemProperty,
+    ICheckIsOwnerProperty checkIsOwnerProperty)
+    : IEditMenuItemProperty
 {
     public void Respond(IEditMenuItemProperty.Request request)
     {
         var property = db.Set<MenuItemProperty>().GetById(request.Id);
         Check.NotNull(property, () => ErrorMessagePersian.NotFound(Glossary.Property));
+        Check.True(checkIsOwnerProperty.Respond(request.Id),
+            () => ErrorMessagePersian.NotAllowed(Glossary.Edit));
 
         var duplicate = searchMenuItemProperty.Respond(new ISearchMenuItemProperty.Request
         {
