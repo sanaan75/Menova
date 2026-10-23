@@ -3,12 +3,10 @@ using Entities;
 using Microsoft.AspNetCore.Http;
 using Services;
 using Services.Apis;
-using Services.Models;
 using Services.TokenDetails;
 using Services.Users.Auth;
-using Web.APIs;
 
-namespace Web;
+namespace Web.APIs;
 
 public class ApiTokenMiddleware(RequestDelegate next)
 {
@@ -18,6 +16,12 @@ public class ApiTokenMiddleware(RequestDelegate next)
         IActorService actorService,
         ITokenDetailCache tokenDetailCache)
     {
+        if (context.Request.Method == HttpMethods.Options)
+        {
+            await next(context);
+            return;
+        }
+        
         var endpoint = context.GetEndpoint();
         var requireAuth = endpoint?.Metadata.GetMetadata<ApiAuthorize>() != null;
 
@@ -27,15 +31,12 @@ public class ApiTokenMiddleware(RequestDelegate next)
             return;
         }
 
-        var authHeader = context.Request.Headers["Authorization"].ToString();
+        var authHeader = context.Request.Headers.Authorization.ToString();
 
         if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
         {
             context.Response.StatusCode = 401;
-            await context.Response.WriteAsync(new ApiResponseModel
-            {
-                Message = "Missing or invalid Authorization header."
-            }.ToJson());
+            await context.Response.WriteAsync("Missing or invalid Authorization header.");
             return;
         }
 
@@ -46,15 +47,30 @@ public class ApiTokenMiddleware(RequestDelegate next)
         if (!isValid)
         {
             context.Response.StatusCode = 401;
-            await context.Response.WriteAsync(new ApiResponseModel
-            {
-                Message = "نیاز به ورود مجدد به برنامه- توکن منقضی شده است"
-            }.ToJson());
+            await context.Response.WriteAsync("Invalid or expired API token.");
             return;
         }
 
         var token = tokenDetailCache.GetByKey(apiKey);
-        var actor = createActor.Respond(token.UserId);
+        if (token is null)
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsync("Invalid or expired API token.");
+            return;
+        }
+
+        Actor actor;
+        try
+        {
+            actor = createActor.Respond(token.UserId);
+        }
+        catch (AppException)
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsync("User account is inactive or unavailable.");
+            return;
+        }
+
         actorService.Set(actor);
 
         await next(context);

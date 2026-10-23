@@ -15,7 +15,9 @@ public class PropertyController(
     ISearchMenuItems searchMenuItems,
     IActorService actorService,
     ISearchMenuItemProperty searchMenuItemProperty,
-    IAddMenuItemProperty addMenuItemProperty)
+    IAddMenuItemProperty addMenuItemProperty,
+    IEditMenuItemProperty editMenuItemProperty,
+    IDeleteMenuItemProperty deleteMenuItemProperty)
     : Controller
 {
     [HttpPost, Route("List")]
@@ -62,6 +64,24 @@ public class PropertyController(
     public IActionResult Add(IAddMenuItemProperty.Request request)
     {
         addMenuItemProperty.Respond(request);
+        db.Save();
+
+        return Ok();
+    }
+
+    [HttpPost, Route("Edit")]
+    public IActionResult Edit(IEditMenuItemProperty.Request request)
+    {
+        editMenuItemProperty.Respond(request);
+        db.Save();
+
+        return Ok();
+    }
+
+    [HttpPost, Route("Remove")]
+    public IActionResult Remove(IdModel request)
+    {
+        deleteMenuItemProperty.Respond(request.Id);
         db.Save();
 
         return Ok();

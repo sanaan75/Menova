@@ -3,17 +3,19 @@ using Entities.Menus;
 
 namespace Services.Menus.Items;
 
-public class EditMenuItem(IDb db, ISearchMenuItems searchMenuItems, IActorService actorService) : IEditMenuItem
+public class EditMenuItem(IDb db, ISearchMenuItems searchMenuItems) : IEditMenuItem
 {
     public void Respond(IEditMenuItem.Request request)
     {
-        Check.Positive(request.Price, () => ErrorMessagePersian.NotAllowed(Glossary.Price));
         Check.Positive(request.Order, () => ErrorMessagePersian.NotAllowed(Glossary.Order));
         Check.Given(request.Name, () => ErrorMessagePersian.Unknown(Glossary.MenuItem));
 
         var item = db.Set<MenuItem>().GetById(request.Id);
         Check.NotNull(item, () => ErrorMessagePersian.NotFound(Glossary.MenuItem));
-        Check.True(actorService.IsAdmin || item.UserId == actorService.UserId,
+        Check.True(searchMenuItems.Respond(new ISearchMenuItems.Request
+        {
+            Id = request.Id
+        }).Any(),
             () => ErrorMessagePersian.NotAllowed(Glossary.Edit));
 
         var duplicate = searchMenuItems.Respond(new ISearchMenuItems.Request

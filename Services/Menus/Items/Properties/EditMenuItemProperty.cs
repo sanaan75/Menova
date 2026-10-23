@@ -11,6 +11,9 @@ public class EditMenuItemProperty(
 {
     public void Respond(IEditMenuItemProperty.Request request)
     {
+        Check.Given(request.Title, () => ErrorMessagePersian.Unknown(Glossary.Title));
+        Check.Positive(request.Price, () => ErrorMessagePersian.NotAllowed(Glossary.Price));
+
         var property = db.Set<MenuItemProperty>().GetById(request.Id);
         Check.NotNull(property, () => ErrorMessagePersian.NotFound(Glossary.Property));
         Check.True(checkIsOwnerProperty.Respond(request.Id),
@@ -19,6 +22,7 @@ public class EditMenuItemProperty(
         var duplicate = searchMenuItemProperty.Respond(new ISearchMenuItemProperty.Request
         {
             IgnoredId = request.Id,
+            MenuItemId = property.MenuItemId,
             Title = request.Title.Clean(),
         }).Any();
 

@@ -32,4 +32,8 @@
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="APIs\SSO\" />
+    </ItemGroup>
+
 </Project>

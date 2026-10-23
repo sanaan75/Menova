@@ -16,7 +16,8 @@ public class CategoryController(
     IAddCategory addCategory,
     IGetCategoryInfo getCategoryInfo,
     IEditCategory editCategory,
-    IDeleteCategory deleteCategory)
+    IDeleteCategory deleteCategory,
+    IChangeCategoryStatus changeCategoryStatus)
     : Controller
 {
     [HttpPost, Route("List")]
@@ -26,7 +27,7 @@ public class CategoryController(
             {
                 Menu = new ISearchMenus.Request
                 {
-                    UserId = actorService.UserId
+                    UserId = actorService.IsAdmin ? null : actorService.UserId
                 }
             })
             .Select(i => new
@@ -78,6 +79,15 @@ public class CategoryController(
     public IActionResult Remove(IdModel request)
     {
         deleteCategory.Respond(request.Id);
+        db.Save();
+
+        return Ok();
+    }
+
+    [HttpPost, Route("ChangeStatus")]
+    public IActionResult ChangeStatus(IdModel request)
+    {
+        changeCategoryStatus.Respond(request.Id);
         db.Save();
 
         return Ok();

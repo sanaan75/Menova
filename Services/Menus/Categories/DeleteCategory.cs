@@ -19,6 +19,8 @@ public class DeleteCategory(IDb db, ICheckIsCategoryOwner checkIsCategoryOwner, 
         }).Any();
         Check.False(hasDependencies, () => ErrorMessagePersian.Invalid("به علت ثبت زیر دسته ، حذف"));
         
+        var notifies = db.Set<CategoryNotify>().Where(i => i.CategoryId == category.Id).ToList();
+        db.Set<CategoryNotify>().RemoveRange(notifies);
         db.Set<Category>().Remove(category);
     }
 }

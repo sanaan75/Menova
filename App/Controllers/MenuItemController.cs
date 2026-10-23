@@ -13,6 +13,8 @@ public class MenuItemController(
     ISearchMenuItems searchMenuItems,
     IAddMenuItem addMenuItem,
     IEditMenuItem editMenuItem,
+    IDeleteMenuItem deleteMenuItem,
+    IChangeMenuItemStatus changeMenuItemStatus,
     IActorService actorService)
     : Controller
 {
@@ -55,6 +57,24 @@ public class MenuItemController(
     public IActionResult Edit(IEditMenuItem.Request request)
     {
         editMenuItem.Respond(request);
+        db.Save();
+
+        return Ok();
+    }
+
+    [HttpPost, Route("Remove")]
+    public IActionResult Remove(IdModel request)
+    {
+        deleteMenuItem.Respond(request.Id);
+        db.Save();
+
+        return Ok();
+    }
+
+    [HttpPost, Route("ChangeStatus")]
+    public IActionResult ChangeStatus(IdModel request)
+    {
+        changeMenuItemStatus.Respond(request.Id);
         db.Save();
 
         return Ok();
