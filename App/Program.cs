@@ -8,7 +8,7 @@ using Services;
 using Services.Apis;
 using Web;
 using Web.APIs;
-using Web.MinimalApis;
+using Web.APIs.MinimalApis;
 using Web.RateLimits;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,11 +54,17 @@ services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
+app.UseMiddleware<ErrorLogMiddleware>();
+app.UseMiddleware<ApiLogMiddleware>();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
+
+app.UseMiddleware<AppExceptionHandler>();
+app.MapAppEndpoints();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -68,12 +74,11 @@ app.UseCors("AllowFrontend"); // ← اینجا
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseMiddleware<ApiTokenMiddleware>();
-app.UseMiddleware<LoggingMiddleware>();
 
+app.MapGet("/", () => Results.Ok(new { Message = "(:" })).AllowAnonymous();
 app.MapControllers();
-
-app.MapAllEndpoints();
 
 app.Run();
 

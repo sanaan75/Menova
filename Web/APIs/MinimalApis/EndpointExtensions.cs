@@ -7,6 +7,7 @@ public static class EndpointExtensions
     public static IEndpointRouteBuilder MapAppEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapUserEndpoints();
+        app.MapMenuLookupEndpoints();
 
         return app;
     }
